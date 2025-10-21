@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{01253AA7-4BA2-C6E8-1F90-636961264D4F}</ProjectGuid>
+    <ProjectGuid>{10859897-D9FF-9CE5-6E2C-D6070E8A5CCA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -1327,15 +1327,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{95F14133-C107-DEB8-26F4-99F523A547A9}</Project>
+      <Project>{66153DA3-607E-BB0C-4107-6A53658BF478}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
     <ProjectReference Include="Fusion.Unity.Editor.csproj">
-      <Project>{07070BAD-0BCB-705C-46AF-DFA89F8BC41B}</Project>
+      <Project>{E41E06E6-0907-43D0-C544-CD11AFDFA19D}</Project>
       <Name>Fusion.Unity.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Fusion.Unity.csproj">
-      <Project>{0E4562C5-067C-3399-E73F-D4B379B176E6}</Project>
+      <Project>{3951073E-DB89-FECB-AFAA-EBC1B0056385}</Project>
       <Name>Fusion.Unity</Name>
     </ProjectReference>
   </ItemGroup>
