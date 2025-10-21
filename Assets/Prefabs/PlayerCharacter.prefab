@@ -239,11 +239,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78db09a0911ccf4d8dcc0522430d222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaycastAttack
-  Damage: 10
+  TendrilPrefab:
+    RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
   PlayerMovement: {fileID: -99119427560449888}
-  RaycastDistance: 2
-  LineWidth: 0.1
-  LineMaterial: {fileID: 2100000, guid: 800ba34c9d5d5644a807f8fc58cd2238, type: 2}
+  MaxTendrilRange: 10
+  TendrilSpeed: 20
 --- !u!114 &-8946174796223492397
 MonoBehaviour:
   m_ObjectHideFlags: 0

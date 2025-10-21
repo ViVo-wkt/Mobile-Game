@@ -62,13 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\PlayerColor.cs" />
+    <Compile Include="Assets\Scripts\TendrilController.cs" />
     <Compile Include="Assets\Scripts\ControllerColliderHit.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
-    <Compile Include="Assets\Scripts\RaycastAttack.cs" />
     <Compile Include="Assets\Default\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
+    <Compile Include="Assets\Scripts\TendrilLauncher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Default\Photon\Fusion\Plugins\NanoSockets\libnanosockets_LICENSE.txt" />
