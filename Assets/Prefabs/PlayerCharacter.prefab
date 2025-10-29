@@ -227,6 +227,9 @@ MonoBehaviour:
     RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
   PlayerMovement: {fileID: -99119427560449888}
   MaxTendrilRange: 1
+  TendrilRaycastMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &-8946174796223492397
 MonoBehaviour:
   m_ObjectHideFlags: 0

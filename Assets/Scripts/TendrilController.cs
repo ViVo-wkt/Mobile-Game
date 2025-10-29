@@ -126,7 +126,7 @@ public class TendrilController : NetworkBehaviour
         {
             Vector3 direction = (TargetPosition - playerPos).normalized;
             Vector3 midpoint = playerPos + direction * (CurrentLength * 0.5f);
-            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, direction);
+            Quaternion rotation = Quaternion.LookRotation(Vector3.up, direction);
 
             // Use Rigidbody.Move for physics-aware movement (better interpolation/prediction)
             if (_rigidbody != null)

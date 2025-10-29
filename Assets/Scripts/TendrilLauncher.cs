@@ -6,12 +6,18 @@ public class TendrilLauncher : NetworkBehaviour
     public NetworkPrefabRef TendrilPrefab;
     public PlayerMovement PlayerMovement;
     public float MaxTendrilRange = 10f;
+    public LayerMask TendrilRaycastMask;
 
     // Track the active tendril object (must be a NetworkObject)
     [Networked]
     private NetworkObject ActiveTendril { get; set; }
 
     private bool isAttacking;
+
+    void Awake()
+    {
+        TendrilRaycastMask = ~LayerMask.GetMask("Player"); // Exclude Player layer; adjust as needed
+    }
 
     void Update()
     {
@@ -63,17 +69,24 @@ public class TendrilLauncher : NetworkBehaviour
             Vector3 hitPoint = ray.GetPoint(distance);
             Vector3 playerPosition = transform.position;
 
-            Vector3 direction = (hitPoint - playerPosition);
-            direction.y = 0f; // Keep it on the XZ plane
+            Vector3 direction = (hitPoint - playerPosition).normalized;
+            direction.y = 0f; // Keep it on the XZ plane (normalize again if needed)
+            direction = direction.normalized;
 
-            // Limit the distance to MaxTendrilRange
-            if (direction.magnitude > MaxTendrilRange)
+            float maxDist = MaxTendrilRange;
+
+            // Raycast to detect obstacles (excluding player layer)
+            if (Physics.Raycast(playerPosition, direction, out RaycastHit hit, maxDist, TendrilRaycastMask))
             {
-                direction = direction.normalized * MaxTendrilRange;
+                // Hit an obstacle: Set target to hit point
+                return hit.point;
             }
-
-            // The target point is the player position plus the (clamped) direction
-            return playerPosition + direction;
+            else
+            {
+                // No obstacle: Clamp to max range or original distance
+                float originalDist = Vector3.Distance(playerPosition, hitPoint);
+                return playerPosition + direction * Mathf.Min(originalDist, maxDist);
+            }
         }
 
         // If raycast fails, use the maximum range in the current forward direction
@@ -88,9 +101,9 @@ public class TendrilLauncher : NetworkBehaviour
         // Spawn at player position (center of capsule)
         Vector3 spawnPosition = transform.position;
 
-        // Initial direction and rotation (align Y-axis to direction)
+        // Initial direction and rotation (align Y-axis to direction with fixed roll)
         Vector3 initialDirection = (initialTarget - spawnPosition).normalized;
-        Quaternion initialRotation = Quaternion.FromToRotation(Vector3.up, initialDirection);
+        Quaternion initialRotation = Quaternion.LookRotation(Vector3.up, initialDirection);
 
         NetworkObject newTendril = Runner.Spawn(
             TendrilPrefab,
