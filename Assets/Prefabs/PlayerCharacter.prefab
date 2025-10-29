@@ -242,8 +242,7 @@ MonoBehaviour:
   TendrilPrefab:
     RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
   PlayerMovement: {fileID: -99119427560449888}
-  MaxTendrilRange: 10
-  TendrilSpeed: 20
+  MaxTendrilRange: 1
 --- !u!114 &-8946174796223492397
 MonoBehaviour:
   m_ObjectHideFlags: 0

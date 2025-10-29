@@ -22,7 +22,7 @@ public class TendrilLauncher : NetworkBehaviour
         }
 
         bool wasAttacking = isAttacking;
-        isAttacking = Input.GetKey(KeyCode.Mouse1); // RMB
+        isAttacking = Input.GetKey(KeyCode.Mouse0); // LMB
 
         if (isAttacking)
         {
@@ -38,16 +38,16 @@ public class TendrilLauncher : NetworkBehaviour
             // If the tendril exists, update its target in FixedUpdateNetwork via state
             if (ActiveTendril != null)
             {
-                // This RPC-like function sets a networked state value on the tendril.
-                // In Shared Mode, the Input Authority can call methods on its controlled object.
+                // This sets a networked state value on the tendril.
                 ActiveTendril.GetComponent<TendrilController>().SetTarget(targetPoint, MaxTendrilRange);
             }
         }
         else if (wasAttacking && ActiveTendril != null)
         {
-            // Mouse button released: Trigger retraction and destruction
+            // Mouse button released: Trigger retraction
             ActiveTendril.GetComponent<TendrilController>().Retract();
-            ActiveTendril = null; // Clear the local reference immediately
+
+            // Do not set ActiveTendril to null here; let the tendril handle despawn and clear it
         }
     }
 
@@ -85,21 +85,20 @@ public class TendrilLauncher : NetworkBehaviour
 
     private void SpawnTendril(Vector3 initialTarget)
     {
-        // SprawdŸ, czy prefab jest poprawny
+        // Check if prefab is valid
         if (!TendrilPrefab.IsValid) return;
 
-        // Spawn slightly ahead of player
-        Vector3 spawnPosition = transform.position + (initialTarget - transform.position).normalized * 0.5f;
+        // Spawn at player position
+        Vector3 spawnPosition = transform.position;
 
-        // Initial orientation correction (same as before)
-        Quaternion baseRotation = Quaternion.LookRotation((initialTarget - transform.position).normalized);
-        Quaternion correctionRotation = Quaternion.Euler(-90, 0, 0);
-        Quaternion finalRotation = baseRotation * correctionRotation;
+        // Initial orientation
+        Vector3 initialDirection = (initialTarget - spawnPosition).normalized;
+        Quaternion initialRotation = Quaternion.FromToRotation(Vector3.up, initialDirection);
 
         NetworkObject newTendril = Runner.Spawn(
             TendrilPrefab,
             spawnPosition,
-            finalRotation,
+            initialRotation,
             inputAuthority: Object.InputAuthority,
             (runner, obj) =>
             {
@@ -115,5 +114,12 @@ public class TendrilLauncher : NetworkBehaviour
 
         // Assign the Networked property to track it across the network
         ActiveTendril = newTendril;
+    }
+
+    // Method to clear ActiveTendril (called via RPC from TendrilController on despawn)
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void ClearActiveTendrilRpc()
+    {
+        ActiveTendril = null;
     }
 }

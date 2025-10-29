@@ -12,11 +12,19 @@ public class TendrilController : NetworkBehaviour
     [Networked]
     private bool IsRetracting { get; set; }
 
-    // Speed at which the tendril extends and retracts
-    public float RetractSpeed = 30f;
+    [Networked]
+    private float CurrentLength { get; set; }
+
+    // Speed at which the tendril extends and retracts (using same speed for both)
+    public float Speed = 30f;
+
+    // Force strength for manipulating objects
+    public float ForceStrength = 10f;
 
     // Reference back to the player/launcher
     private TendrilLauncher _launcher;
+
+    private Rigidbody _rigidbody;
 
     // Call from launcher on spawn
     public void Initialize(TendrilLauncher launcher, Vector3 initialTarget)
@@ -25,8 +33,15 @@ public class TendrilController : NetworkBehaviour
         TargetPosition = initialTarget;
         MaxRange = launcher.MaxTendrilRange;
         IsRetracting = false;
-        // Tendril starts at the player's position
+        CurrentLength = 0.1f; // Start with a small length to avoid zero-scale issues
         transform.position = _launcher.transform.position;
+        transform.localScale = new Vector3(transform.localScale.x, CurrentLength, transform.localScale.z);
+
+        _rigidbody = GetComponent<Rigidbody>();
+        if (_rigidbody != null)
+        {
+            _rigidbody.isKinematic = true;
+        }
     }
 
     // Called every frame by the launcher while the button is held
@@ -34,7 +49,7 @@ public class TendrilController : NetworkBehaviour
     {
         TargetPosition = newTarget;
         MaxRange = maxRange;
-        IsRetracting = false;
+        IsRetracting = false; // Interrupt retraction if button pressed again
     }
 
     // Called when the mouse button is released
@@ -47,7 +62,7 @@ public class TendrilController : NetworkBehaviour
     {
         if (_launcher == null)
         {
-            // Spróbuj znaleŸæ referencjê do launchera, jeœli zosta³a utracona (czêste w trybie shared)
+            // Try to find reference to launcher if lost (common in shared mode)
             var playerObj = Runner.GetPlayerObject(Object.InputAuthority);
             if (playerObj != null)
             {
@@ -57,69 +72,73 @@ public class TendrilController : NetworkBehaviour
         }
 
         Vector3 playerPos = _launcher.transform.position;
-        Vector3 currentPos = transform.position;
+
+        float delta = Speed * Runner.DeltaTime;
+
+        float desiredLength = IsRetracting ? 0.1f : Mathf.Min(Vector3.Distance(playerPos, TargetPosition), MaxRange);
+        CurrentLength = Mathf.MoveTowards(CurrentLength, desiredLength, delta);
+
+        if (IsRetracting && CurrentLength <= 0.1f)
+        {
+            // Fully retracted: clear ActiveTendril on launcher and despawn
+            if (_launcher != null)
+            {
+                _launcher.ClearActiveTendrilRpc();
+            }
+            Runner.Despawn(Object);
+            return;
+        }
+
+        // Update position, rotation, and scale (common for both extend and retract)
+        if (CurrentLength > 0f)
+        {
+            Vector3 direction = (TargetPosition - playerPos).normalized;
+            Vector3 midpoint = playerPos + direction * (CurrentLength / 2f);
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, direction);
+
+            if (_rigidbody != null)
+            {
+                _rigidbody.MovePosition(midpoint);
+                _rigidbody.MoveRotation(rotation);
+            }
+            else
+            {
+                transform.position = midpoint;
+                transform.rotation = rotation;
+            }
+
+            transform.localScale = new Vector3(transform.localScale.x, CurrentLength, transform.localScale.z);
+        }
+        else
+        {
+            transform.localScale = Vector3.zero;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Only interact on the State Authority to avoid duplicates
+        if (!HasStateAuthority) return;
+
+        // Manipulate physical items (e.g., apply a force to push or pull them)
+        Rigidbody rb = collision.rigidbody;
+        if (rb == null || collision.contacts.Length == 0) return;
+
+        Vector3 contactPoint = collision.contacts[0].point;
+        Vector3 forceDirection;
 
         if (IsRetracting)
         {
-            // --- RETRACTION LOGIC ---
-
-            // Move the tendril back towards the player
-            float step = RetractSpeed * Runner.DeltaTime;
-            transform.position = Vector3.MoveTowards(currentPos, playerPos, step);
-
-            // Check if fully retracted (close enough to player's center)
-            if (Vector3.Distance(transform.position, playerPos) < 0.1f)
-            {
-                // Tendril has returned, destroy it
-                Runner.Despawn(Object);
-            }
+            // Pull towards player
+            forceDirection = (_launcher.transform.position - contactPoint).normalized;
         }
-        else // Extending/Extended
+        else
         {
-            // --- EXTENSION/STRETCH LOGIC ---
-
-            // Target position of the tip
-            Vector3 targetTip = TargetPosition;
-
-            // Direction from player to target tip
-            Vector3 direction = (targetTip - playerPos).normalized;
-
-            // The object's actual position should represent the tip that extends/retracts.
-            float targetDistance = Vector3.Distance(playerPos, targetTip);
-            float maxExtensionStep = RetractSpeed * Runner.DeltaTime;
-
-            // Move the object's position towards the target tip
-            transform.position = Vector3.MoveTowards(currentPos, targetTip, maxExtensionStep);
-
-            // Calculate the distance from the player to the current tip position
-            float currentDistance = Vector3.Distance(playerPos, transform.position);
-
-            // Set the scale and orientation to make it look like a stretched tentacle
-
-            // Scale Z: Length from player to tip
-            transform.localScale = new Vector3(
-                transform.localScale.x,
-                transform.localScale.y,
-                currentDistance
-            );
-
-            // Center the object halfway between the player and the tip
-            // Note: This relies on the prefab's pivot being at one end or requires a child object setup.
-            // Assuming the pivot is in the center of the cylinder for simplicity:
-            // transform.position = playerPos + direction * (currentDistance * 0.5f);
-
-            // Re-orient the tendril to point towards the target
-            Quaternion baseRotation = Quaternion.LookRotation(direction);
-            Quaternion correctionRotation = Quaternion.Euler(-90, 0, 0);
-            transform.rotation = baseRotation * correctionRotation;
+            // Push away from player
+            forceDirection = (TargetPosition - _launcher.transform.position).normalized;
         }
-    }
 
-    // (Optional: Re-add your collision logic here if needed for interaction)
-    /*
-    private void OnTriggerEnter(Collider other)
-    {
-        // ... (Deal damage or interact only when fully extended or on initial hit) ...
+        // Poprawka: u¿yj AddForceAtPosition zamiast nieistniej¹cej AddForceAtPoint
+        rb.AddForceAtPosition(forceDirection * ForceStrength, contactPoint);
     }
-    */
 }
