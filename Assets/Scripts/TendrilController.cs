@@ -15,32 +15,64 @@ public class TendrilController : NetworkBehaviour
     [Networked]
     private float CurrentLength { get; set; }
 
-    // Speed at which the tendril extends and retracts (using same speed for both)
+    // Speed at which the tendril extends and retracts
     public float Speed = 30f;
-
-    // Force strength for manipulating objects
-    public float ForceStrength = 10f;
 
     // Reference back to the player/launcher
     private TendrilLauncher _launcher;
 
     private Rigidbody _rigidbody;
+    private Collider _collider;
 
-    // Call from launcher on spawn
+    // Called from launcher on spawn (on spawning client)
     public void Initialize(TendrilLauncher launcher, Vector3 initialTarget)
     {
         _launcher = launcher;
         TargetPosition = initialTarget;
         MaxRange = launcher.MaxTendrilRange;
         IsRetracting = false;
-        CurrentLength = 0.1f; // Start with a small length to avoid zero-scale issues
+        CurrentLength = 0.1f; // Start small to avoid issues
         transform.position = _launcher.transform.position;
-        transform.localScale = new Vector3(transform.localScale.x, CurrentLength, transform.localScale.z);
 
+        // Preserve original thickness scale, set length
+        Vector3 originalScale = transform.localScale;
+        transform.localScale = new Vector3(originalScale.x, CurrentLength, originalScale.z);
+
+        // Setup physics components
         _rigidbody = GetComponent<Rigidbody>();
         if (_rigidbody != null)
         {
             _rigidbody.isKinematic = true;
+        }
+
+        _collider = GetComponent<Collider>();
+        if (_collider == null)
+        {
+            Debug.LogError("TendrilController requires a Collider!");
+        }
+        // Ensure it's NOT a trigger for automatic physics interaction
+        if (_collider != null)
+        {
+            _collider.isTrigger = false;
+        }
+    }
+
+    public override void Spawned()
+    {
+        base.Spawned();
+
+        // Ignore collisions with all colliders on the player object and its children on all clients
+        var playerObj = Runner.GetPlayerObject(Object.InputAuthority);
+        if (playerObj != null)
+        {
+            Collider[] playerColliders = playerObj.GetComponentsInChildren<Collider>();
+            foreach (var playerCollider in playerColliders)
+            {
+                if (playerCollider != null && _collider != null)
+                {
+                    Physics.IgnoreCollision(_collider, playerCollider);
+                }
+            }
         }
     }
 
@@ -49,7 +81,7 @@ public class TendrilController : NetworkBehaviour
     {
         TargetPosition = newTarget;
         MaxRange = maxRange;
-        IsRetracting = false; // Interrupt retraction if button pressed again
+        IsRetracting = false;
     }
 
     // Called when the mouse button is released
@@ -62,7 +94,7 @@ public class TendrilController : NetworkBehaviour
     {
         if (_launcher == null)
         {
-            // Try to find reference to launcher if lost (common in shared mode)
+            // Re-find launcher if reference lost
             var playerObj = Runner.GetPlayerObject(Object.InputAuthority);
             if (playerObj != null)
             {
@@ -72,15 +104,15 @@ public class TendrilController : NetworkBehaviour
         }
 
         Vector3 playerPos = _launcher.transform.position;
-
         float delta = Speed * Runner.DeltaTime;
 
+        // Compute desired length
         float desiredLength = IsRetracting ? 0.1f : Mathf.Min(Vector3.Distance(playerPos, TargetPosition), MaxRange);
         CurrentLength = Mathf.MoveTowards(CurrentLength, desiredLength, delta);
 
+        // Despawn if fully retracted
         if (IsRetracting && CurrentLength <= 0.1f)
         {
-            // Fully retracted: clear ActiveTendril on launcher and despawn
             if (_launcher != null)
             {
                 _launcher.ClearActiveTendrilRpc();
@@ -89,13 +121,14 @@ public class TendrilController : NetworkBehaviour
             return;
         }
 
-        // Update position, rotation, and scale (common for both extend and retract)
-        if (CurrentLength > 0f)
+        // Update transform: position at midpoint, rotation aligned, scale length along Y
+        if (CurrentLength > 0.1f)
         {
             Vector3 direction = (TargetPosition - playerPos).normalized;
-            Vector3 midpoint = playerPos + direction * (CurrentLength / 2f);
+            Vector3 midpoint = playerPos + direction * (CurrentLength * 0.5f);
             Quaternion rotation = Quaternion.FromToRotation(Vector3.up, direction);
 
+            // Use Rigidbody.Move for physics-aware movement (better interpolation/prediction)
             if (_rigidbody != null)
             {
                 _rigidbody.MovePosition(midpoint);
@@ -107,38 +140,10 @@ public class TendrilController : NetworkBehaviour
                 transform.rotation = rotation;
             }
 
-            transform.localScale = new Vector3(transform.localScale.x, CurrentLength, transform.localScale.z);
+            // Scale Y for length (preserves X/Z thickness)
+            Vector3 scale = transform.localScale;
+            scale.y = CurrentLength;
+            transform.localScale = scale;
         }
-        else
-        {
-            transform.localScale = Vector3.zero;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        // Only interact on the State Authority to avoid duplicates
-        if (!HasStateAuthority) return;
-
-        // Manipulate physical items (e.g., apply a force to push or pull them)
-        Rigidbody rb = collision.rigidbody;
-        if (rb == null || collision.contacts.Length == 0) return;
-
-        Vector3 contactPoint = collision.contacts[0].point;
-        Vector3 forceDirection;
-
-        if (IsRetracting)
-        {
-            // Pull towards player
-            forceDirection = (_launcher.transform.position - contactPoint).normalized;
-        }
-        else
-        {
-            // Push away from player
-            forceDirection = (TargetPosition - _launcher.transform.position).normalized;
-        }
-
-        // Poprawka: u¿yj AddForceAtPosition zamiast nieistniej¹cej AddForceAtPoint
-        rb.AddForceAtPosition(forceDirection * ForceStrength, contactPoint);
     }
 }

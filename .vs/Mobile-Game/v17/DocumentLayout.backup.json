@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\desktop\\mobile-game\\assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\desktop\\mobile-game\\assets\\scripts\\tendrilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\RaycastAttack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\RaycastAttack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\desktop\\mobile-game\\assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,32 +22,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "TendrilLauncher.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilLauncher.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
-              "RelativeToolTip": "Assets\\Scripts\\TendrilLauncher.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAgwE4AAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T11:02:42.851Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "RaycastAttack.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\RaycastAttack.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\RaycastAttack.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\RaycastAttack.cs",
-              "RelativeToolTip": "Assets\\Scripts\\RaycastAttack.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T10:57:13.415Z"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -58,7 +34,34 @@
               "RelativeToolTip": "Assets\\Scripts\\PlayerMovement.cs",
               "ViewState": "AgIAACkAAAAAAAAAAAAwwDcAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T10:48:46.07Z"
+              "WhenOpened": "2025-10-21T10:48:46.07Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TendrilLauncher.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilLauncher.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
+              "RelativeToolTip": "Assets\\Scripts\\TendrilLauncher.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAYwHgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T12:40:10.603Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TendrilController.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilController.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\TendrilController.cs",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAYwJQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T12:33:02.624Z",
+              "EditorCaption": ""
             }
           ]
         }

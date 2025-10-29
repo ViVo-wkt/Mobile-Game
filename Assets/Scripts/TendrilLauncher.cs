@@ -38,7 +38,6 @@ public class TendrilLauncher : NetworkBehaviour
             // If the tendril exists, update its target in FixedUpdateNetwork via state
             if (ActiveTendril != null)
             {
-                // This sets a networked state value on the tendril.
                 ActiveTendril.GetComponent<TendrilController>().SetTarget(targetPoint, MaxTendrilRange);
             }
         }
@@ -46,8 +45,6 @@ public class TendrilLauncher : NetworkBehaviour
         {
             // Mouse button released: Trigger retraction
             ActiveTendril.GetComponent<TendrilController>().Retract();
-
-            // Do not set ActiveTendril to null here; let the tendril handle despawn and clear it
         }
     }
 
@@ -88,10 +85,10 @@ public class TendrilLauncher : NetworkBehaviour
         // Check if prefab is valid
         if (!TendrilPrefab.IsValid) return;
 
-        // Spawn at player position
+        // Spawn at player position (center of capsule)
         Vector3 spawnPosition = transform.position;
 
-        // Initial orientation
+        // Initial direction and rotation (align Y-axis to direction)
         Vector3 initialDirection = (initialTarget - spawnPosition).normalized;
         Quaternion initialRotation = Quaternion.FromToRotation(Vector3.up, initialDirection);
 
@@ -106,7 +103,6 @@ public class TendrilLauncher : NetworkBehaviour
                 TendrilController controller = obj.GetComponent<TendrilController>();
                 if (controller != null)
                 {
-                    // Pass the launcher and initial target
                     controller.Initialize(this, initialTarget);
                 }
             }

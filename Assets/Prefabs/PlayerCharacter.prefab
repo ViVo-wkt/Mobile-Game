@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 215980297151204281}
   - component: {fileID: 3949657492081265272}
   - component: {fileID: -99119427560449888}
-  - component: {fileID: 6345957051531973833}
   - component: {fileID: 872320311616869365}
   - component: {fileID: 6761959262992377120}
   - component: {fileID: -8946174796223492397}
@@ -137,7 +136,6 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3949657492081265272}
   - {fileID: -99119427560449888}
-  - {fileID: 6345957051531973833}
   - {fileID: 872320311616869365}
   - {fileID: 6761959262992377120}
   ForceRemoteRenderTimeframe: 0
@@ -195,25 +193,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1e1fd0dd74529648a9792581a35538e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  PlayerSpeed: 4
+  PlayerSpeed: 5
   RotationSmoothTime: 0.1
   MoveSmoothTime: 0.1
   Camera: {fileID: 0}
   JoystickRadius: 100
---- !u!114 &6345957051531973833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3020575455395471729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44accd9bf510f1f4dabab6c49ae38589, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerColor
-  MeshRenderer: {fileID: 6926584045394135263}
-  _NetworkedColor: {r: 1, g: 0, b: 0, a: 0}
 --- !u!114 &872320311616869365
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\desktop\\mobile-game\\assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\desktop\\mobile-game\\assets\\scripts\\tendrilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,11 +22,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "PlayerMovement.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerMovement.cs",
@@ -40,16 +40,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "TendrilLauncher.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilLauncher.cs",
               "ToolTip": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
               "RelativeToolTip": "Assets\\Scripts\\TendrilLauncher.cs",
-              "ViewState": "AgIAAEQAAAAAAAAAAADgv1cAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAAAYwHgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T12:40:10.603Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-21T12:40:10.603Z"
             },
             {
               "$type": "Document",
@@ -59,7 +58,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilController.cs",
               "ToolTip": "C:\\Users\\wwoznia3\\Desktop\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
               "RelativeToolTip": "Assets\\Scripts\\TendrilController.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAuwAMAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAYwJQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-21T12:33:02.624Z",
               "EditorCaption": ""
