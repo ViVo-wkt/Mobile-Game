@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: f1e1fd0dd74529648a9792581a35538e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - MoveJoystick: {instanceID: 0}
+  - AimJoystick: {instanceID: 0}
+  - Camera: {instanceID: 0}
+  - TendrilLauncher: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
