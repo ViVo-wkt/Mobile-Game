@@ -196,11 +196,9 @@ MonoBehaviour:
   PlayerSpeed: 5
   RotationSmoothTime: 0.1
   MoveSmoothTime: 0.1
-  MoveJoystick: {fileID: 2110158872518001624, guid: 0ccdd232f2b205b47ae4b07d559892c0, type: 3}
-  AimJoystick: {fileID: 2110158872518001624, guid: 07c73bfebd095104697d3500238d8c18, type: 3}
+  MoveJoystickPrefab: {fileID: 6523555955481998525, guid: 0ccdd232f2b205b47ae4b07d559892c0, type: 3}
+  AimJoystickPrefab: {fileID: 6523555955481998525, guid: 07c73bfebd095104697d3500238d8c18, type: 3}
   Camera: {fileID: 2971714104754389607, guid: ed4ae8396f6b2b641ad4ee92362c8bf5, type: 3}
-  MaxTendrilRange: 10
-  TendrilLauncher: {fileID: 0}
 --- !u!114 &872320311616869365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,8 +228,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RaycastAttack
   TendrilPrefab:
     RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
-  PlayerMovement: {fileID: -99119427560449888}
   MaxTendrilRange: 1
+  TendrilRaycastMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &-8946174796223492397
 MonoBehaviour:
   m_ObjectHideFlags: 0

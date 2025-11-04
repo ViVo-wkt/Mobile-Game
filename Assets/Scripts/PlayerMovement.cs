@@ -1,4 +1,5 @@
-﻿using Fusion;
+﻿using System.Collections; // Dodano brakującą dyrektywę using
+using Fusion;
 using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
@@ -12,18 +13,17 @@ public class PlayerMovement : NetworkBehaviour
     public float RotationSmoothTime = 0.1f;
     public float MoveSmoothTime = 0.1f;
 
-    [Header("Joysticks")]
-    public CustomJoystick MoveJoystick;     // Left
-    public CustomJoystick AimJoystick;      // Right ← NEW!
+    [Header("Joystick Prefabs")]
+    public GameObject MoveJoystickPrefab;
+    public GameObject AimJoystickPrefab;
 
-    [Header("Aiming")]
+    [Header("Camera")]
     public Camera Camera;
-    public float MaxTendrilRange = 10f;     // For tendril targeting
 
+    private CustomJoystick _moveJoystickInstance;
+    private CustomJoystick _aimJoystickInstance;
     private Vector3 _moveVelocity;
-
-    // ← DODAJ TO POLE
-    public TendrilLauncher TendrilLauncher; 
+    private Vector2 _lastAimInput;
 
     private void Awake()
     {
@@ -32,13 +32,58 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void Spawned()
     {
-        if (HasStateAuthority)
+        base.Spawned();
+
+        if (!Object.HasInputAuthority) return;
+
+        Canvas canvas = FindObjectOfType<Canvas>();
+        if (!canvas) { Debug.LogError("Canvas missing!"); return; }
+
+        // LEFT JOYSTICK
+        if (MoveJoystickPrefab)
         {
-            Camera = Camera.main;
-            if (Camera != null)
-            {
-                Camera.GetComponent<ThirdPersonCamera>().Target = transform;
-            }
+            GameObject go = Instantiate(MoveJoystickPrefab, canvas.transform);
+            var a = go.AddComponent<JoystickAnchor>();
+            a.preset = JoystickAnchor.AnchorPreset.BottomLeft;
+            a.offset = new Vector2(0, 0);
+            a.size = new Vector2(180, 180);
+            a.Apply();
+            _moveJoystickInstance = go.GetComponent<CustomJoystick>();
+        }
+
+        // RIGHT JOYSTICK
+        if (AimJoystickPrefab)
+        {
+            GameObject go = Instantiate(AimJoystickPrefab, canvas.transform);
+            var a = go.AddComponent<JoystickAnchor>();
+            a.preset = JoystickAnchor.AnchorPreset.BottomRight;
+            a.offset = new Vector2(0, 0);
+            a.size = new Vector2(180, 180);
+            a.Apply();
+            _aimJoystickInstance = go.GetComponent<CustomJoystick>();
+        }
+
+        // FIXED: Wait for camera
+        StartCoroutine(WaitForCameraAndAssign());
+    }
+
+    private IEnumerator WaitForCameraAndAssign()
+    {
+        Camera cam = null;
+        while (cam == null)
+        {
+            cam = Camera.main;
+            yield return null;
+        }
+
+        var camScript = cam.GetComponent<ThirdPersonCamera>();
+        if (camScript != null)
+        {
+            camScript.Target = transform;
+        }
+        else
+        {
+            Debug.LogError("ThirdPersonCamera missing!");
         }
     }
 
@@ -46,18 +91,12 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        // MOVEMENT (Left Joystick or Keyboard)
-        if (MoveJoystick != null)
-        {
-            Vector2 moveInput = MoveJoystick.Direction;
-            _inputDirection = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-        }
-        else
-        {
-            _inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
-        }
+        // === MOVEMENT INPUT ===
+        Vector2 moveInput = _moveJoystickInstance != null ? _moveJoystickInstance.Direction :
+            new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        _inputDirection = new Vector3(moveInput.x, 0, moveInput.y).normalized;
 
-        // ← ALL YOUR EXISTING MOVEMENT CODE (UNCHANGED)
+        // === APPLY MOVEMENT ===
         Vector3 desiredVelocity = _inputDirection * PlayerSpeed;
         _moveVelocity = Vector3.Lerp(_moveVelocity, desiredVelocity, 1f - Mathf.Exp(-MoveSmoothTime / Runner.DeltaTime));
         _controller.Move(_moveVelocity * Runner.DeltaTime);
@@ -68,57 +107,54 @@ public class PlayerMovement : NetworkBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
         }
 
-        // ← NEW: AIMING (Right Joystick)
-        UpdateAiming();
+        // === TENDRIL AIM + EXTEND ===
+        UpdateTendrilAim();
     }
 
-    private void UpdateAiming()
+    private void UpdateTendrilAim()
     {
-        if (AimJoystick == null || Camera == null) return;
+        if (_aimJoystickInstance == null) return;
 
-        Vector2 aimInput = AimJoystick.Direction;
-        if (aimInput == Vector2.zero)
+        Vector2 aimInput = _aimJoystickInstance.Direction;
+        TendrilLauncher launcher = GetComponent<TendrilLauncher>();
+        if (launcher == null) return;
+
+        if ((aimInput - _lastAimInput).sqrMagnitude < 0.01f) return;
+        _lastAimInput = aimInput;
+
+        if (aimInput.magnitude > 0.1f)
         {
-            // No input: Aim forward
-            aimInput = Vector2.up;
+            // FIXED: Pure world-space (joystick = world directions)
+            Vector2 correctedInput = new Vector2(aimInput.x, aimInput.y);
+            Vector3 worldDir = new Vector3(correctedInput.x, 0, correctedInput.y).normalized;
+
+            float extendDist = aimInput.magnitude * launcher.MaxTendrilRange;
+            Vector3 target = transform.position + worldDir * extendDist;
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, worldDir, out RaycastHit hit, extendDist))
+                target = hit.point;
+
+            launcher.SetAimTarget(target);
         }
-
-        // Convert screen joystick input → world direction
-        Vector3 aimDirection = new Vector3(aimInput.x, 0, aimInput.y).normalized;
-
-        // Transform to world space (relative to player facing)
-        aimDirection = transform.TransformDirection(aimDirection);
-
-        // Raycast from camera to find target point (like your existing mouse logic)
-        Vector3 targetPoint = GetAimTargetPoint(aimDirection);
-
-        // ← UPDATE TENDRIL TARGET (Your existing TendrilLauncher will use this)
-        if (TendrilLauncher != null)
+        else
         {
-            TendrilLauncher.SetAimTarget(targetPoint);
+            launcher.SetAimTarget(Vector3.zero);
+            _lastAimInput = Vector2.zero;
         }
-    }
-
-    private Vector3 GetAimTargetPoint(Vector3 direction)
-    {
-        Vector3 origin = transform.position;
-        Plane ground = new Plane(Vector3.up, origin);
-
-        // Ray from player toward aim direction, max range
-        if (ground.Raycast(new Ray(origin, direction), out float distance))
-        {
-            return origin + direction * Mathf.Min(distance, MaxTendrilRange);
-        }
-        return origin + direction * MaxTendrilRange;
     }
 
     public override void Render()
     {
         if (HasStateAuthority) return;
-        // ← YOUR INTERPOLATION (UNCHANGED)
         Vector3 targetPosition = transform.position;
         Quaternion targetRotation = transform.rotation;
         transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Exp(-MoveSmoothTime / Time.deltaTime));
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f - Mathf.Exp(-RotationSmoothTime / Time.deltaTime));
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        if (_moveJoystickInstance != null) Destroy(_moveJoystickInstance.gameObject);
+        if (_aimJoystickInstance != null) Destroy(_aimJoystickInstance.gameObject);
     }
 }

@@ -4,43 +4,39 @@ using UnityEngine;
 public class TendrilLauncher : NetworkBehaviour
 {
     public NetworkPrefabRef TendrilPrefab;
-    public PlayerMovement PlayerMovement; // ← Assign in prefab (same object)
     public float MaxTendrilRange = 10f;
+    public LayerMask TendrilRaycastMask;
 
-    // Track the active tendril object (must be a NetworkObject)
-    [Networked]
-    private NetworkObject ActiveTendril { get; set; }
-
-    // Store current aim target (set by PlayerMovement via right joystick)
+    [Networked] private NetworkObject ActiveTendril { get; set; }
     [Networked] private Vector3 AimTargetPoint { get; set; }
+    [Networked] private bool IsRetracting { get; set; }
 
-    private bool isAttacking;
+    private void Awake()
+    {
+        TendrilRaycastMask = ~LayerMask.GetMask("Player");
+    }
 
     void Update()
     {
-        // Only the Input Authority client handles local input
         if (!HasInputAuthority) return;
 
-        bool wasAttacking = isAttacking;
-        isAttacking = Input.GetKey(KeyCode.Mouse0); // LMB (or touch fire button)
+        // FIXED: STRICT BLOCK - No extend if retracting OR no target
+        bool wantsToExtend = !IsRetracting && AimTargetPoint != Vector3.zero;
+        bool hasTendril = ActiveTendril != null;
 
-        if (isAttacking)
+        if (wantsToExtend && !hasTendril)
         {
-            Vector3 targetPoint = AimTargetPoint; // ← Uses joystick aim!
-
-            if (!wasAttacking && ActiveTendril == null)
-            {
-                SpawnTendril(targetPoint);
-            }
-
-            if (ActiveTendril != null)
-            {
-                ActiveTendril.GetComponent<TendrilController>().SetTarget(targetPoint, MaxTendrilRange);
-            }
+            SpawnTendril(AimTargetPoint);
         }
-        else if (wasAttacking && ActiveTendril != null)
+        else if (wantsToExtend && hasTendril)
+        {
+            ActiveTendril.GetComponent<TendrilController>().SetTarget(AimTargetPoint, MaxTendrilRange);
+        }
+        else if (!wantsToExtend && hasTendril)
         {
             ActiveTendril.GetComponent<TendrilController>().Retract();
+            IsRetracting = true;
+            AimTargetPoint = Vector3.zero; // ← FORCE CLEAR IMMEDIATELY
         }
     }
 
@@ -48,57 +44,34 @@ public class TendrilLauncher : NetworkBehaviour
     {
         if (!TendrilPrefab.IsValid) return;
 
-        Vector3 spawnPosition = transform.position;
-        Vector3 initialDirection = (initialTarget - spawnPosition).normalized;
-        Quaternion initialRotation = Quaternion.FromToRotation(Vector3.up, initialDirection);
+        Vector3 spawnPos = transform.position;
+        Vector3 dir = (initialTarget - spawnPos).normalized;
+        Quaternion rot = Quaternion.LookRotation(Vector3.up, dir);
 
-        NetworkObject newTendril = Runner.Spawn(
-            TendrilPrefab,
-            spawnPosition,
-            initialRotation,
+        NetworkObject tendril = Runner.Spawn(
+            TendrilPrefab, spawnPos, rot,
             inputAuthority: Object.InputAuthority,
-            (runner, obj) =>
-            {
-                TendrilController controller = obj.GetComponent<TendrilController>();
-                if (controller != null)
-                {
-                    controller.Initialize(this, initialTarget);
-                }
-            }
+            (runner, obj) => obj.GetComponent<TendrilController>().Initialize(this, initialTarget)
         );
 
-        ActiveTendril = newTendril;
+        ActiveTendril = tendril;
+        IsRetracting = false;
     }
 
-    // Called by PlayerMovement when right joystick moves
-    public void SetAimTarget(Vector3 targetPoint)
+    public void SetAimTarget(Vector3 target)
     {
-        AimTargetPoint = targetPoint;
+        AimTargetPoint = target;
+        if (target != Vector3.zero)
+        {
+            IsRetracting = false; // Allow extend
+        }
     }
 
-    // Called by TendrilController on despawn
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void ClearActiveTendrilRpc()
     {
         ActiveTendril = null;
-    }
-
-    // Optional: Fallback to mouse if no joystick
-    private Vector3 CalculateMouseFallback()
-    {
-        if (PlayerMovement == null || PlayerMovement.Camera == null) return transform.forward * MaxTendrilRange;
-
-        Ray ray = PlayerMovement.Camera.ScreenPointToRay(Input.mousePosition);
-        Plane ground = new Plane(Vector3.up, transform.position);
-
-        if (ground.Raycast(ray, out float distance))
-        {
-            Vector3 hit = ray.GetPoint(distance);
-            Vector3 dir = (hit - transform.position);
-            dir.y = 0;
-            return transform.position + Vector3.ClampMagnitude(dir, MaxTendrilRange);
-        }
-
-        return transform.position + transform.forward * MaxTendrilRange;
+        IsRetracting = false;
+        AimTargetPoint = Vector3.zero; // ← DOUBLE CLEAR
     }
 }

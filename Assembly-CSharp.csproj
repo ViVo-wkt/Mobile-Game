@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
+    <Compile Include="Assets\Scripts\JoystickAnchor.cs" />
     <Compile Include="Assets\Scripts\TendrilLauncher.cs" />
     <Compile Include="Assets\Scripts\CustomJoystick.cs" />
   </ItemGroup>
