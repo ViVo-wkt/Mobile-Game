@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 6761959262992377120}
   - component: {fileID: -8946174796223492397}
   m_Layer: 0
-  m_Name: PlayerCharacter
+  m_Name: PlayerCharacter 3
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaycastAttack
   TendrilPrefab:
-    RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
+    RawGuidValue: b9c4ee48e27dd0f4eb429a5f710aa903
   MaxTendrilRange: 1
   TendrilRaycastMask:
     serializedVersion: 2

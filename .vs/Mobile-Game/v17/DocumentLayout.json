@@ -1,21 +1,25 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\",
+  "WorkspaceRootPath": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\mobile-game\\assets\\scripts\\tendrilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\scripts\\menumanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\menumanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\scripts\\tendrilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrilcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\tendrillauncher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\assets\\scripts\\customjoystick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\customjoystick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\customjoystick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -26,15 +30,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "PlayerMovement.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerMovement.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerMovement.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAawCUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -43,11 +47,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "MenuManager.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\MenuManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MenuManager.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\MenuManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MenuManager.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAASwC4AAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T11:59:04.07Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "CustomJoystick.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\CustomJoystick.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\CustomJoystick.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CustomJoystick.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\CustomJoystick.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\CustomJoystick.cs",
               "RelativeToolTip": "Assets\\Scripts\\CustomJoystick.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAQwDYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -55,11 +76,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "TendrilLauncher.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilLauncher.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
               "RelativeToolTip": "Assets\\Scripts\\TendrilLauncher.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAQwEkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -67,13 +88,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "TendrilController.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilController.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
               "RelativeToolTip": "Assets\\Scripts\\TendrilController.cs",
-              "ViewState": "AgIAAFMAAAAAAAAAAAAQwJQAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAFMAAAAAAAAAAAAQwGgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-21T12:33:02.624Z",
               "EditorCaption": ""
