@@ -36,7 +36,7 @@ public class TendrilController : NetworkBehaviour
     {
         TargetPosition = newTarget;
         MaxRange = maxRange;
-        IsRetracting = false; // Interrupt retract
+        IsRetracting = false;
     }
 
     public void Retract()

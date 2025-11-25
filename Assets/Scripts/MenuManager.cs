@@ -14,13 +14,13 @@ public class MenuManager : MonoBehaviour
 
     [Header("Fusion")]
     public NetworkRunner networkRunner;
-    public string gameSceneName = "Mobilga Placeholder"; // Your game scene name
+    public string gameSceneName = "Mobilga Placeholder";
 
     private void Awake()
     {
         // Auto-assign if not set
-        if (networkRunner == null) networkRunner = FindObjectOfType<NetworkRunner>();
-        if (roomNameInput == null) roomNameInput = FindObjectOfType<TMP_InputField>();
+        if (networkRunner == null) networkRunner = FindFirstObjectByType<NetworkRunner>();
+        if (roomNameInput == null) roomNameInput = FindFirstObjectByType<TMP_InputField>();
         if (hostButton == null) hostButton = GameObject.Find("HostButton")?.GetComponent<Button>();
         if (joinButton == null) joinButton = GameObject.Find("JoinButton")?.GetComponent<Button>();
         if (startButton == null) startButton = GameObject.Find("StartButton")?.GetComponent<Button>();
@@ -44,7 +44,6 @@ public class MenuManager : MonoBehaviour
         {
             GameMode = GameMode.Shared,
             SessionName = roomName,
-            // Poprawka: usuniêto przypisanie Scene, bo NetworkSceneInfo nie przyjmuje int
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         };
 
@@ -52,7 +51,6 @@ public class MenuManager : MonoBehaviour
         await networkRunner.StartGame(args);
         Debug.Log($"Hosting room: {roomName}");
 
-        // Show Start button for host
         startButton.gameObject.SetActive(true);
     }
 
@@ -77,7 +75,6 @@ public class MenuManager : MonoBehaviour
     {
         if (networkRunner.IsServer)
         {
-            // Poprawka: u¿yj NetworkRunner.LoadScene zamiast nieistniej¹cej SetActiveScene
             await networkRunner.LoadScene(gameSceneName);
         }
     }

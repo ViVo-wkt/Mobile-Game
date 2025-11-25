@@ -12,8 +12,8 @@ public class JoystickAnchor : MonoBehaviour
 
     [Header("Position")]
     public AnchorPreset preset = AnchorPreset.BottomLeft;
-    public Vector2 offset = Vector2.zero;               // extra pixels from the edge
-    public Vector2 size = new Vector2(200, 200);        // background size (optional)
+    public Vector2 offset = Vector2.zero;
+    public Vector2 size = new Vector2(200, 200);        // background size
 
     [Header("Visuals")]
     public Color backgroundColor = new Color(1, 1, 1, 0.3f);
@@ -21,7 +21,6 @@ public class JoystickAnchor : MonoBehaviour
 
     private void Update()
     {
-        // Only runs in edit-mode so you see the result instantly
 #if UNITY_EDITOR
         if (!Application.isPlaying) Apply();
 #endif
@@ -33,10 +32,8 @@ public class JoystickAnchor : MonoBehaviour
         Canvas canvas = GetComponentInParent<Canvas>();
         if (!canvas) return;
 
-        // ---- 1. Set size ----
         rt.sizeDelta = size;
 
-        // ---- 2. Set anchor + pivot ----
         switch (preset)
         {
             case AnchorPreset.BottomLeft:
@@ -61,10 +58,8 @@ public class JoystickAnchor : MonoBehaviour
                 break;
         }
 
-        // ---- 3. Apply offset ----
         rt.anchoredPosition = offset;
 
-        // ---- 4. Apply colours (optional) ----
         Image bg = GetComponent<Image>();
         if (bg) bg.color = backgroundColor;
 

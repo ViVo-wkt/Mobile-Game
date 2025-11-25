@@ -26,25 +26,22 @@ public class Health : NetworkBehaviour
     {
         base.Spawned();
 
-        // Only the local player spawns their own health UI
         if (Object.HasInputAuthority)
         {
             SpawnHealthUI();
         }
 
-        UpdateHealthUI(); // Initial update
+        UpdateHealthUI();
     }
 
     private void SpawnHealthUI()
     {
         if (HealthDisplayPrefab == null || _healthUIInstance != null) return;
 
-        // Spawn UI above player
         Vector3 spawnPos = transform.position + Vector3.up * 2.5f;
         _healthUIInstance = Instantiate(HealthDisplayPrefab, spawnPos, Quaternion.identity);
-        _healthUIInstance.transform.SetParent(transform, false); // World position preserved
+        _healthUIInstance.transform.SetParent(transform, false);
 
-        // Get the TMP component
         HealthText = _healthUIInstance.GetComponentInChildren<TextMeshProUGUI>();
         if (HealthText == null)
         {

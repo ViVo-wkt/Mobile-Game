@@ -1,4 +1,4 @@
-﻿using System.Collections; // Dodano brakującą dyrektywę using
+﻿using System.Collections;
 using Fusion;
 using UnityEngine;
 
@@ -36,10 +36,10 @@ public class PlayerMovement : NetworkBehaviour
 
         if (!Object.HasInputAuthority) return;
 
-        Canvas canvas = FindObjectOfType<Canvas>();
+        Canvas canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
         if (!canvas) { Debug.LogError("Canvas missing!"); return; }
 
-        // LEFT JOYSTICK
+        // LEFT
         if (MoveJoystickPrefab)
         {
             GameObject go = Instantiate(MoveJoystickPrefab, canvas.transform);
@@ -51,7 +51,7 @@ public class PlayerMovement : NetworkBehaviour
             _moveJoystickInstance = go.GetComponent<CustomJoystick>();
         }
 
-        // RIGHT JOYSTICK
+        // RIGHT
         if (AimJoystickPrefab)
         {
             GameObject go = Instantiate(AimJoystickPrefab, canvas.transform);
@@ -63,7 +63,6 @@ public class PlayerMovement : NetworkBehaviour
             _aimJoystickInstance = go.GetComponent<CustomJoystick>();
         }
 
-        // FIXED: Wait for camera
         StartCoroutine(WaitForCameraAndAssign());
     }
 
@@ -91,12 +90,10 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        // === MOVEMENT INPUT ===
         Vector2 moveInput = _moveJoystickInstance != null ? _moveJoystickInstance.Direction :
             new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         _inputDirection = new Vector3(moveInput.x, 0, moveInput.y).normalized;
 
-        // === APPLY MOVEMENT ===
         Vector3 desiredVelocity = _inputDirection * PlayerSpeed;
         _moveVelocity = Vector3.Lerp(_moveVelocity, desiredVelocity, 1f - Mathf.Exp(-MoveSmoothTime / Runner.DeltaTime));
         _controller.Move(_moveVelocity * Runner.DeltaTime);
@@ -107,7 +104,6 @@ public class PlayerMovement : NetworkBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
         }
 
-        // === TENDRIL AIM + EXTEND ===
         UpdateTendrilAim();
     }
 
@@ -124,7 +120,6 @@ public class PlayerMovement : NetworkBehaviour
 
         if (aimInput.magnitude > 0.1f)
         {
-            // FIXED: Pure world-space (joystick = world directions)
             Vector2 correctedInput = new Vector2(aimInput.x, aimInput.y);
             Vector3 worldDir = new Vector3(correctedInput.x, 0, correctedInput.y).normalized;
 

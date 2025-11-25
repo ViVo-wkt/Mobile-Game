@@ -15,13 +15,10 @@ public class ThirdPersonCamera : MonoBehaviour
             return;
         }
 
-        // Calculate desired camera position directly above the target
         Vector3 desiredPosition = Target.position + (Vector3.up * CameraHeight);
 
-        // Smoothly move to desired position
         transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, SmoothTime);
 
-        // Set rotation to look straight down (90 degrees)
         transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 }

@@ -20,7 +20,6 @@ public class TendrilLauncher : NetworkBehaviour
     {
         if (!HasInputAuthority) return;
 
-        // FIXED: STRICT BLOCK - No extend if retracting OR no target
         bool wantsToExtend = !IsRetracting && AimTargetPoint != Vector3.zero;
         bool hasTendril = ActiveTendril != null;
 
@@ -36,7 +35,7 @@ public class TendrilLauncher : NetworkBehaviour
         {
             ActiveTendril.GetComponent<TendrilController>().Retract();
             IsRetracting = true;
-            AimTargetPoint = Vector3.zero; // ← FORCE CLEAR IMMEDIATELY
+            AimTargetPoint = Vector3.zero;
         }
     }
 
@@ -63,7 +62,7 @@ public class TendrilLauncher : NetworkBehaviour
         AimTargetPoint = target;
         if (target != Vector3.zero)
         {
-            IsRetracting = false; // Allow extend
+            IsRetracting = false;
         }
     }
 
@@ -72,6 +71,6 @@ public class TendrilLauncher : NetworkBehaviour
     {
         ActiveTendril = null;
         IsRetracting = false;
-        AimTargetPoint = Vector3.zero; // ← DOUBLE CLEAR
+        AimTargetPoint = Vector3.zero;
     }
 }
