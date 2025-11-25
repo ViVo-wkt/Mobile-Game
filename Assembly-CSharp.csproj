@@ -51,6 +51,7 @@
     <Compile Include="Assets\Scripts\TriggerDoor.cs" />
     <Compile Include="Assets\Scripts\TendrilController.cs" />
     <Compile Include="Assets\Scripts\ControllerColliderHit.cs" />
+    <Compile Include="Assets\Scripts\BackgroundFlicker.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Default\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
