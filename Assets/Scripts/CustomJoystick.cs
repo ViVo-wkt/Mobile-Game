@@ -25,7 +25,7 @@ public class CustomJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         _canvas = GetComponentInParent<Canvas>();
         _bgRect = background.rectTransform;
         _startPos = handle.rectTransform.anchoredPosition;
-        handle.enabled = false;
+        // REMOVED: handle.enabled = false;  <-- This was hiding it at start
     }
 
     public void OnPointerDown(PointerEventData eventData) => OnDrag(eventData);
@@ -43,13 +43,13 @@ public class CustomJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
         handle.rectTransform.anchoredPosition = _startPos + offset;
         Direction = offset / radius;
-        handle.enabled = true;
+        // REMOVED: handle.enabled = true; <-- No longer needed as we never disable it
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         Direction = Vector2.zero;
         handle.rectTransform.anchoredPosition = _startPos;
-        handle.enabled = !snapBack;
+        // REMOVED: handle.enabled = !snapBack; <-- This was hiding it on release
     }
 }

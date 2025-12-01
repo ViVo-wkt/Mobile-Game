@@ -79,7 +79,15 @@ namespace Fusion {
       var previousPos  = transform.position;
       var moveVelocity = Data.Velocity;
 
-      direction = direction.normalized;
+      // --- CHANGE START ---
+      // REMOVED: direction = direction.normalized; 
+      
+      // Ensure we don't exceed length 1.0 (e.g. diagonal keyboard input)
+      if (direction.sqrMagnitude > 1f) 
+          direction.Normalize();
+
+      float inputMagnitude = direction.magnitude;
+      // --- CHANGE END ---
 
       if (Data.Grounded && moveVelocity.y < 0) {
         moveVelocity.y = 0f;
@@ -91,11 +99,25 @@ namespace Fusion {
       horizontalVel.x = moveVelocity.x;
       horizontalVel.z = moveVelocity.z;
 
-      if (direction == default) {
+      if (inputMagnitude < 0.001f) {
         horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
       } else {
-        horizontalVel      = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
+        // --- CHANGE START ---
+        // We use the magnitude to scale the MaxSpeed. 
+        // If joystick is 50%, target speed is 50% of MaxSpeed.
+        float targetSpeed = maxSpeed * inputMagnitude;
+        
+        // Normalize direction for the acceleration vector so acceleration is constant
+        Vector3 accDir = direction / inputMagnitude;
+        
+        horizontalVel += accDir * acceleration * deltaTime;
+        
+        // Clamp to the target analog speed
+        horizontalVel = Vector3.ClampMagnitude(horizontalVel, targetSpeed);
+
+        // Internal rotation (optional, often handled by PlayerMovement, but kept for compatibility)
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(accDir), rotationSpeed * Runner.DeltaTime);
+        // --- CHANGE END ---
       }
 
       moveVelocity.x = horizontalVel.x;

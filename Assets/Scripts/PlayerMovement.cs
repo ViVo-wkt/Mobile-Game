@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    private CharacterController _controller;
+    // CHANGED: Use Fusion's NetworkCharacterController instead of Unity's CharacterController
+    private NetworkCharacterController _controller;
     private Vector3 _inputDirection;
     private Quaternion _targetRotation;
 
@@ -27,7 +28,8 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Awake()
     {
-        _controller = GetComponent<CharacterController>();
+        // CHANGED: Fetch the NetworkCharacterController component
+        _controller = GetComponent<NetworkCharacterController>();
     }
 
     public override void Spawned()
@@ -92,15 +94,20 @@ public class PlayerMovement : NetworkBehaviour
 
         Vector2 moveInput = _moveJoystickInstance != null ? _moveJoystickInstance.Direction :
             new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        _inputDirection = new Vector3(moveInput.x, 0, moveInput.y).normalized;
 
-        Vector3 desiredVelocity = _inputDirection * PlayerSpeed;
-        _moveVelocity = Vector3.Lerp(_moveVelocity, desiredVelocity, 1f - Mathf.Exp(-MoveSmoothTime / Runner.DeltaTime));
-        _controller.Move(_moveVelocity * Runner.DeltaTime);
+        // 1. Do NOT use .normalized here. Use ClampMagnitude to keep values between 0.0 and 1.0
+        Vector3 direction = new Vector3(moveInput.x, 0, moveInput.y);
+        direction = Vector3.ClampMagnitude(direction, 1f);
 
-        if (_inputDirection != Vector3.zero)
+        // 2. Pass the direction directly. 
+        // We do NOT multiply by Speed or DeltaTime here because the NetworkCharacterController
+        // calculates velocity internally based on its own Acceleration/MaxSpeed settings.
+        _controller.Move(direction);
+
+        // Rotation Logic
+        if (direction.sqrMagnitude > 0.001f)
         {
-            _targetRotation = Quaternion.LookRotation(_inputDirection, Vector3.up);
+            _targetRotation = Quaternion.LookRotation(direction, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
         }
 
@@ -138,14 +145,8 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    public override void Render()
-    {
-        if (HasStateAuthority) return;
-        Vector3 targetPosition = transform.position;
-        Quaternion targetRotation = transform.rotation;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Exp(-MoveSmoothTime / Time.deltaTime));
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1f - Mathf.Exp(-RotationSmoothTime / Time.deltaTime));
-    }
+    // REMOVED: The Render() method is no longer needed. 
+    // NetworkCharacterController handles interpolation automatically.
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
