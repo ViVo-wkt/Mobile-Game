@@ -227,7 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaycastAttack
   TendrilPrefab:
-    RawGuidValue: b9c4ee48e27dd0f4eb429a5f710aa903
+    RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
   MaxTendrilRange: 1
   TendrilRaycastMask:
     serializedVersion: 2
