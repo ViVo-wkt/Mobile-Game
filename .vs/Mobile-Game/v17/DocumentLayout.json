@@ -3,19 +3,31 @@
   "WorkspaceRootPath": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3951073E-DB89-FECB-AFAA-EBC1B0056385}|Fusion.Unity.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\default\\photon\\fusion\\runtime\\utilities\\runnervisibility\\enableonsinglerunner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3951073E-DB89-FECB-AFAA-EBC1B0056385}|Fusion.Unity.csproj|solutionrelative:assets\\default\\photon\\fusion\\runtime\\utilities\\runnervisibility\\enableonsinglerunner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\scripts\\networkinputmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\networkinputmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\scripts\\playerspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\playerspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playerspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\scripts\\turret.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\networkinputmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\networkinputmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\touchbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\touchbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\networkinputdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\networkinputdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\turret.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\turret.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -42,17 +54,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "PlayerMovement.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerMovement.cs",
               "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerMovement.cs",
-              "ViewState": "AgIAAHQAAAAAAAAAAAAIwIUAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAADwvycAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-21T10:48:46.07Z",
               "IsPinned": true,
@@ -60,50 +72,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "NetworkInputManager.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\NetworkInputManager.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\NetworkInputManager.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAiwEwAAAABAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "EnableOnSingleRunner.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Default\\Photon\\Fusion\\Runtime\\Utilities\\RunnerVisibility\\EnableOnSingleRunner.cs",
+              "RelativeDocumentMoniker": "Assets\\Default\\Photon\\Fusion\\Runtime\\Utilities\\RunnerVisibility\\EnableOnSingleRunner.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Default\\Photon\\Fusion\\Runtime\\Utilities\\RunnerVisibility\\EnableOnSingleRunner.cs",
+              "RelativeToolTip": "Assets\\Default\\Photon\\Fusion\\Runtime\\Utilities\\RunnerVisibility\\EnableOnSingleRunner.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-02T12:21:22.971Z",
+              "WhenOpened": "2025-12-02T13:38:09.034Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PlayerSpawner.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerSpawner.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerSpawner.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerSpawner.cs",
-              "RelativeToolTip": "Assets\\Scripts\\PlayerSpawner.cs",
-              "ViewState": "AgIAAEkAAAAAAAAAAAAiwHAAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-02T12:21:00.522Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Turret.cs",
-              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\Turret.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Turret.cs",
-              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\Turret.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Turret.cs",
-              "ViewState": "AgIAAHkAAAAAAAAAAAAiwKAAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-02T11:18:58.846Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "MenuManager.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\MenuManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\MenuManager.cs",
@@ -114,7 +96,72 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 4,
+              "Title": "TouchButton.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TouchButton.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\TouchButton.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TouchButton.cs",
+              "RelativeToolTip": "Assets\\Scripts\\TouchButton.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T13:16:10.383Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "NetworkInputData.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\NetworkInputData.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\NetworkInputData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T13:01:33.481Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NetworkInputManager.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\NetworkInputManager.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\NetworkInputManager.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAiwFQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T12:21:22.971Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PlayerSpawner.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerSpawner.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerSpawner.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerSpawner.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PlayerSpawner.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwDcAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T12:21:00.522Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Turret.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\Turret.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Turret.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\Turret.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Turret.cs",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAiwKAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T11:18:58.846Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "CustomJoystick.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\CustomJoystick.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CustomJoystick.cs",
@@ -126,7 +173,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "TendrilLauncher.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilLauncher.cs",
@@ -138,7 +185,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "TendrilController.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilController.cs",

@@ -123,10 +123,11 @@ GameObject:
   - component: {fileID: 2224702891927243355}
   - component: {fileID: 2702505464936530937}
   - component: {fileID: -99119427560449888}
-  - component: {fileID: 6761959262992377120}
   - component: {fileID: -8946174796223492397}
   - component: {fileID: -2562427926910556187}
   - component: {fileID: 2184231817263856100}
+  - component: {fileID: -6348003262951739122}
+  - component: {fileID: 6675664649190668364}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player
@@ -244,8 +245,9 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -99119427560449888}
-  - {fileID: 6761959262992377120}
   - {fileID: 2184231817263856100}
+  - {fileID: -6348003262951739122}
+  - {fileID: 6675664649190668364}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-99119427560449888
 MonoBehaviour:
@@ -261,25 +263,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   RotationSmoothTime: 1
   MoveJoystickPrefab: {fileID: 6523555955481998525, guid: 0ccdd232f2b205b47ae4b07d559892c0, type: 3}
-  AimJoystickPrefab: {fileID: 6523555955481998525, guid: 07c73bfebd095104697d3500238d8c18, type: 3}
+  AimJoystickPrefab: {fileID: 4090880653849354932, guid: 53f10874c30d1dc45ba8cd8047c9b273, type: 3}
   Camera: {fileID: 2971714104754389607, guid: ed4ae8396f6b2b641ad4ee92362c8bf5, type: 3}
---- !u!114 &6761959262992377120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3020575455395471729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a78db09a0911ccf4d8dcc0522430d222, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RaycastAttack
-  TendrilPrefab:
-    RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
-  MaxTendrilRange: 1
-  SpawnPoint: {fileID: 0}
-  _NetworkedAimTarget: {x: 0, y: 0, z: 0}
 --- !u!114 &-8946174796223492397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,3 +321,39 @@ MonoBehaviour:
   braking: 25
   maxSpeed: 3
   rotationSpeed: 5
+--- !u!114 &-6348003262951739122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020575455395471729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bcb1732a85145488bf5084e856957f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _NetworkedHealth: 100
+  _IsDead:
+    _value: 0
+  HealthText: {fileID: 0}
+  HealthDisplayPrefab: {fileID: 0}
+  LocalHudPrefab: {fileID: 6464909509758447777, guid: 3cb2146982bfaca44bd46ca3dc9a87c7, type: 3}
+--- !u!114 &6675664649190668364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020575455395471729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031e09790bfd2e6438382b11f3589b27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BoostMultiplier: 2
+  Duration: 4
+  Cooldown: 5
+  BoostColor: {r: 0.0047169924, g: 0.57907206, b: 1, a: 1}
+  _IsActive:
+    _value: 0

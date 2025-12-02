@@ -1,0 +1,5 @@
+C:/Users/wwoznia3/Documents/GitHub/Mobile-Game/.utmp/RelWithDebInfo/2j5x1r4h/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/wwoznia3/Documents/GitHub/Mobile-Game/.utmp/RelWithDebInfo/2j5x1r4h/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/wwoznia3/Documents/GitHub/Mobile-Game/.utmp/RelWithDebInfo/2j5x1r4h/arm64-v8a/GameActivity/CMakeFiles/game.dir
+C:/Users/wwoznia3/Documents/GitHub/Mobile-Game/.utmp/RelWithDebInfo/2j5x1r4h/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+C:/Users/wwoznia3/Documents/GitHub/Mobile-Game/.utmp/RelWithDebInfo/2j5x1r4h/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir

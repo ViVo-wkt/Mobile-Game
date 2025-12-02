@@ -3,6 +3,30 @@
   "WorkspaceRootPath": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|c:\\users\\wwoznia3\\documents\\github\\mobile-game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\networkinputmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\networkinputmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\touchbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\touchbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\networkinputdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\networkinputdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\playerspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playerspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\turret.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\turret.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\MenuManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\MenuManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\customjoystick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\customjoystick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{66153DA3-607E-BB0C-4107-6A53658BF478}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,28 +50,25 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "PlayerMovement.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerMovement.cs",
               "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerMovement.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerMovement.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAawCUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAiwI8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-21T10:48:46.07Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "MenuManager.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\MenuManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\MenuManager.cs",
@@ -62,7 +79,71 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TouchButton.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TouchButton.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\TouchButton.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TouchButton.cs",
+              "RelativeToolTip": "Assets\\Scripts\\TouchButton.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T13:16:10.383Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "NetworkInputData.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\NetworkInputData.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\NetworkInputData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T13:01:33.481Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NetworkInputManager.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\NetworkInputManager.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\NetworkInputManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\NetworkInputManager.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAiwFQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T12:21:22.971Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PlayerSpawner.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerSpawner.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerSpawner.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\PlayerSpawner.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PlayerSpawner.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAiwDkAAABWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T12:21:00.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Turret.cs",
+              "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\Turret.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Turret.cs",
+              "ToolTip": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\Turret.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Turret.cs",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAiwKAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-02T11:18:58.846Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "CustomJoystick.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\CustomJoystick.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\CustomJoystick.cs",
@@ -74,7 +155,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "TendrilLauncher.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilLauncher.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilLauncher.cs",
@@ -86,7 +167,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "TendrilController.cs",
               "DocumentMoniker": "C:\\Users\\wwoznia3\\Documents\\GitHub\\Mobile-Game\\Assets\\Scripts\\TendrilController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TendrilController.cs",

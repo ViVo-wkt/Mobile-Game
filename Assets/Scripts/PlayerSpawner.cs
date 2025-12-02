@@ -55,7 +55,7 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
 
         Debug.Log($"[PlayerSpawner] Spawning character for Player: {player}");
 
-        Vector3 spawnPosition = new Vector3(0, 2f, 0);
+        Vector3 spawnPosition = new Vector3(UnityEngine.Random.Range(-2f, 2f), 2f, 0);
 
         // --- SELECTION LOGIC ---
         // Default to Player 1 prefab

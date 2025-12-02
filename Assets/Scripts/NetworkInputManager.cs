@@ -6,33 +6,40 @@ using UnityEngine;
 
 public class NetworkInputManager : MonoBehaviour, INetworkRunnerCallbacks
 {
-    // Dictionary to map each Runner (Player) to their specific joysticks
-    private static Dictionary<NetworkRunner, (CustomJoystick Move, CustomJoystick Aim)> _joysticks =
-        new Dictionary<NetworkRunner, (CustomJoystick Move, CustomJoystick Aim)>();
+    // DICTIONARY: Maps a specific NetworkRunner to its specific Joysticks
+    // This allows multiple players to run in the Editor without overwriting each other's input.
+    private static Dictionary<NetworkRunner, (CustomJoystick Move, CustomJoystick Aim)> _localInputs =
+        new Dictionary<NetworkRunner, (CustomJoystick, CustomJoystick)>();
 
-    // Called by PlayerMovement to register its local joysticks
+    // Call this from PlayerMovement to register controls for a specific runner
     public static void RegisterInput(NetworkRunner runner, CustomJoystick move, CustomJoystick aim)
     {
         if (runner == null) return;
 
-        if (_joysticks.ContainsKey(runner))
-            _joysticks[runner] = (move, aim);
+        if (_localInputs.ContainsKey(runner))
+        {
+            _localInputs[runner] = (move, aim);
+        }
         else
-            _joysticks.Add(runner, (move, aim));
+        {
+            _localInputs.Add(runner, (move, aim));
+        }
     }
 
     public static void UnregisterInput(NetworkRunner runner)
     {
-        if (runner != null && _joysticks.ContainsKey(runner))
-            _joysticks.Remove(runner);
+        if (runner != null && _localInputs.ContainsKey(runner))
+        {
+            _localInputs.Remove(runner);
+        }
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         var data = new NetworkInputData();
 
-        // Check if we have joysticks registered for THIS specific runner
-        if (_joysticks.TryGetValue(runner, out var joysticks))
+        // Check if we have registered inputs for THIS specific runner
+        if (_localInputs.TryGetValue(runner, out var joysticks))
         {
             // 1. Read Movement
             if (joysticks.Move != null)
@@ -44,7 +51,8 @@ public class NetworkInputManager : MonoBehaviour, INetworkRunnerCallbacks
         }
         else
         {
-            // Fallback to Keyboard (Only if no joystick registered)
+            // Fallback for debugging (e.g. if UI failed to spawn)
+            // Note: This applies to ALL runners if they have no UI, so be careful in Editor
             data.MoveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         }
 
@@ -56,9 +64,7 @@ public class NetworkInputManager : MonoBehaviour, INetworkRunnerCallbacks
         UnregisterInput(runner);
     }
 
-    // --- Boilerplate ---
-    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
-    public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+    // --- Boilerplate Callbacks ---
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
@@ -70,6 +76,8 @@ public class NetworkInputManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
+    public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

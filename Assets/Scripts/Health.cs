@@ -40,7 +40,6 @@ public class Health : NetworkBehaviour
         if (movement != null) movement.enabled = !IsDead;
 
         // 2. Disable/Enable Physics (Collider)
-        // We use the standard CharacterController referenced by your scripts
         var charController = GetComponent<CharacterController>();
         if (charController != null)
         {
@@ -70,7 +69,7 @@ public class Health : NetworkBehaviour
 
         SpawnWorldHealthUI();
         UpdateHealthUI();
-        
+
         // Ensure visual state matches IsDead when joining late
         DeathStateChanged();
     }
@@ -78,10 +77,10 @@ public class Health : NetworkBehaviour
     private void SpawnLocalHUD()
     {
         if (LocalHudPrefab == null) return;
-        
-        // Use UnityEngine.Object to avoid conflict with Fusion.NetworkBehaviour.Object
+
+        // Use FindFirstObjectByType to be compatible with Unity 6+
         Canvas canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
-        
+
         if (canvas != null)
         {
             GameObject hudObj = Instantiate(LocalHudPrefab, canvas.transform);
@@ -114,6 +113,14 @@ public class Health : NetworkBehaviour
     {
         if (IsDead) return;
 
+        // --- NEW: Check for Immunity (Speed Boost Ability) ---
+        var speedAbility = GetComponent<SpeedBoostAbility>();
+        if (speedAbility != null && speedAbility.IsImmune)
+        {
+            return; // Ignore damage entirely
+        }
+        // ----------------------------------------------------
+
         NetworkedHealth = Mathf.Max(0, NetworkedHealth - damage);
 
         if (NetworkedHealth <= 0)
@@ -125,9 +132,8 @@ public class Health : NetworkBehaviour
     private void Die()
     {
         IsDead = true;
-        
-        // FIX: Manually call the callback on the Host/State Authority
-        // because OnChanged callbacks don't trigger locally by default.
+
+        // Trigger visually on Host immediately
         DeathStateChanged();
 
         StartCoroutine(RespawnCoroutine());
@@ -144,14 +150,13 @@ public class Health : NetworkBehaviour
         NetworkedHealth = 100f;
         IsDead = false;
 
-        // FIX: Manually call callback again to revive locally
         DeathStateChanged();
 
         // Reset Position
         var netChar = GetComponent<NetworkCharacterController>();
         if (netChar != null)
         {
-            netChar.Teleport(new Vector3(0, 2f, 0)); 
+            netChar.Teleport(new Vector3(0, 2f, 0));
         }
         else
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement; // Added for Scene access
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -29,25 +30,19 @@ public class PlayerMovement : NetworkBehaviour
     {
         base.Spawned();
 
-        // 1. Check Authority
-        if (!Object.HasInputAuthority)
+        if (!Object.HasInputAuthority) return;
+
+        // FIX: Find the canvas specifically in the scene where this Player exists
+        Canvas canvas = FindLocalCanvas();
+
+        if (!canvas)
         {
-            // This is expected for other players' characters on your screen
+            Debug.LogError($"Canvas missing in scene {gameObject.scene.name}!");
             return;
         }
 
-        Debug.Log($"[PlayerMovement] Spawning Local UI for {gameObject.name}");
-
-        // 2. Check Canvas
-        Canvas canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
-        if (canvas == null)
-        {
-            Debug.LogError($"[PlayerMovement] CRITICAL: No Canvas found in scene! Joysticks cannot be spawned.");
-            return;
-        }
-
-        // 3. Check Prefabs and Spawn
-        if (MoveJoystickPrefab != null)
+        // Spawn LEFT Joystick (Movement)
+        if (MoveJoystickPrefab)
         {
             GameObject go = Instantiate(MoveJoystickPrefab, canvas.transform);
             var a = go.AddComponent<JoystickAnchor>();
@@ -57,12 +52,9 @@ public class PlayerMovement : NetworkBehaviour
             a.Apply();
             _moveJoystickInstance = go.GetComponent<CustomJoystick>();
         }
-        else
-        {
-            Debug.LogError($"[PlayerMovement] MoveJoystickPrefab is MISSING on {gameObject.name}. Please assign it in the Inspector.");
-        }
 
-        if (AimJoystickPrefab != null)
+        // Spawn RIGHT Joystick (Aiming)
+        if (AimJoystickPrefab)
         {
             GameObject go = Instantiate(AimJoystickPrefab, canvas.transform);
             var a = go.AddComponent<JoystickAnchor>();
@@ -72,29 +64,46 @@ public class PlayerMovement : NetworkBehaviour
             a.Apply();
             _aimJoystickInstance = go.GetComponent<CustomJoystick>();
         }
-        else
-        {
-            Debug.LogError($"[PlayerMovement] AimJoystickPrefab is MISSING on {gameObject.name}. Please assign it in the Inspector.");
-        }
 
-        // 4. Register Input
+        // FIX: Register with the Manager using the specific Runner instance
         NetworkInputManager.RegisterInput(Runner, _moveJoystickInstance, _aimJoystickInstance);
 
         StartCoroutine(WaitForCameraAndAssign());
     }
 
+    // Helper to find a Canvas in the same scene as this object (supports Multi-Peer)
+    private Canvas FindLocalCanvas()
+    {
+        Scene myScene = gameObject.scene;
+
+        // Iterate through root objects in this specific scene
+        if (myScene.IsValid())
+        {
+            foreach (GameObject rootObj in myScene.GetRootGameObjects())
+            {
+                Canvas c = rootObj.GetComponentInChildren<Canvas>(true);
+                if (c != null) return c;
+            }
+        }
+
+        // Fallback for single player/standard builds
+        return UnityEngine.Object.FindFirstObjectByType<Canvas>();
+    }
+
     private IEnumerator WaitForCameraAndAssign()
     {
-        if (Camera.main == null) yield break;
-
-        Camera cam = null;
-        while (cam == null)
+        // Safety check loop for camera
+        while (Camera.main == null)
         {
-            cam = Camera.main;
             yield return null;
         }
 
-        var camScript = cam.GetComponent<ThirdPersonCamera>();
+        // In Multi-Peer, Camera.main might point to the wrong camera (Host's camera),
+        // but typically specialized camera logic is needed for split-screen/multi-peer.
+        // For now, we assume Camera.main works for the active view.
+        Camera = Camera.main;
+
+        var camScript = Camera.GetComponent<ThirdPersonCamera>();
         if (camScript != null)
         {
             camScript.Target = transform;
@@ -126,6 +135,7 @@ public class PlayerMovement : NetworkBehaviour
         if (_moveJoystickInstance != null) Destroy(_moveJoystickInstance.gameObject);
         if (_aimJoystickInstance != null) Destroy(_aimJoystickInstance.gameObject);
 
+        // Unregister to keep dictionary clean
         if (Object.HasInputAuthority)
         {
             NetworkInputManager.UnregisterInput(runner);
