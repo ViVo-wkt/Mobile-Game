@@ -144,7 +144,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3343892976272958504}
@@ -259,9 +259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1e1fd0dd74529648a9792581a35538e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  PlayerSpeed: 4
   RotationSmoothTime: 1
-  MoveSmoothTime: 0.1
   MoveJoystickPrefab: {fileID: 6523555955481998525, guid: 0ccdd232f2b205b47ae4b07d559892c0, type: 3}
   AimJoystickPrefab: {fileID: 6523555955481998525, guid: 07c73bfebd095104697d3500238d8c18, type: 3}
   Camera: {fileID: 2971714104754389607, guid: ed4ae8396f6b2b641ad4ee92362c8bf5, type: 3}
@@ -280,9 +278,8 @@ MonoBehaviour:
   TendrilPrefab:
     RawGuidValue: 4dac98247587f9c40a3b5a9e4865ef3d
   MaxTendrilRange: 1
-  TendrilRaycastMask:
-    serializedVersion: 2
-    m_Bits: 0
+  SpawnPoint: {fileID: 0}
+  _NetworkedAimTarget: {x: 0, y: 0, z: 0}
 --- !u!114 &-8946174796223492397
 MonoBehaviour:
   m_ObjectHideFlags: 0

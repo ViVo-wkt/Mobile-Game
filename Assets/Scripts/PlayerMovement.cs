@@ -29,13 +29,25 @@ public class PlayerMovement : NetworkBehaviour
     {
         base.Spawned();
 
-        if (!Object.HasInputAuthority) return;
+        // 1. Check Authority
+        if (!Object.HasInputAuthority)
+        {
+            // This is expected for other players' characters on your screen
+            return;
+        }
 
+        Debug.Log($"[PlayerMovement] Spawning Local UI for {gameObject.name}");
+
+        // 2. Check Canvas
         Canvas canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
-        if (!canvas) { Debug.LogError("Canvas missing!"); return; }
+        if (canvas == null)
+        {
+            Debug.LogError($"[PlayerMovement] CRITICAL: No Canvas found in scene! Joysticks cannot be spawned.");
+            return;
+        }
 
-        // Spawn LEFT Joystick (Movement)
-        if (MoveJoystickPrefab)
+        // 3. Check Prefabs and Spawn
+        if (MoveJoystickPrefab != null)
         {
             GameObject go = Instantiate(MoveJoystickPrefab, canvas.transform);
             var a = go.AddComponent<JoystickAnchor>();
@@ -44,13 +56,13 @@ public class PlayerMovement : NetworkBehaviour
             a.size = new Vector2(180, 180);
             a.Apply();
             _moveJoystickInstance = go.GetComponent<CustomJoystick>();
-
-            // Register with Input Manager so the input struct can find it
-            NetworkInputManager.MoveJoystick = _moveJoystickInstance;
+        }
+        else
+        {
+            Debug.LogError($"[PlayerMovement] MoveJoystickPrefab is MISSING on {gameObject.name}. Please assign it in the Inspector.");
         }
 
-        // Spawn RIGHT Joystick (Aiming)
-        if (AimJoystickPrefab)
+        if (AimJoystickPrefab != null)
         {
             GameObject go = Instantiate(AimJoystickPrefab, canvas.transform);
             var a = go.AddComponent<JoystickAnchor>();
@@ -59,16 +71,22 @@ public class PlayerMovement : NetworkBehaviour
             a.size = new Vector2(180, 180);
             a.Apply();
             _aimJoystickInstance = go.GetComponent<CustomJoystick>();
-
-            // Register with Input Manager so the input struct can find it
-            NetworkInputManager.AimJoystick = _aimJoystickInstance;
         }
+        else
+        {
+            Debug.LogError($"[PlayerMovement] AimJoystickPrefab is MISSING on {gameObject.name}. Please assign it in the Inspector.");
+        }
+
+        // 4. Register Input
+        NetworkInputManager.RegisterInput(Runner, _moveJoystickInstance, _aimJoystickInstance);
 
         StartCoroutine(WaitForCameraAndAssign());
     }
 
     private IEnumerator WaitForCameraAndAssign()
     {
+        if (Camera.main == null) yield break;
+
         Camera cam = null;
         while (cam == null)
         {
@@ -85,29 +103,20 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        // Initialize direction to zero (idle)
         Vector3 direction = Vector3.zero;
 
-        // 1. Try to get Input
         if (GetInput(out NetworkInputData data))
         {
-            // 2. Convert Vector2 input to Vector3 direction
             direction = new Vector3(data.MoveDirection.x, 0, data.MoveDirection.y);
-            
-            // 3. Clamp to ensure diagonal movement isn't faster than 1.0
             direction = Vector3.ClampMagnitude(direction, 1f);
         }
 
-        // 4. MOVE ALWAYS (Crucial Fix)
-        // We call this even if direction is zero. 
-        // This ensures the NetworkCharacterController applies Gravity and Braking every tick.
         _controller.Move(direction);
 
-        // 5. Rotation only happens if we are actually moving
         if (direction.sqrMagnitude > 0.001f)
         {
             _targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 
+            transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation,
                 1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
         }
     }
@@ -116,5 +125,10 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (_moveJoystickInstance != null) Destroy(_moveJoystickInstance.gameObject);
         if (_aimJoystickInstance != null) Destroy(_aimJoystickInstance.gameObject);
+
+        if (Object.HasInputAuthority)
+        {
+            NetworkInputManager.UnregisterInput(runner);
+        }
     }
 }

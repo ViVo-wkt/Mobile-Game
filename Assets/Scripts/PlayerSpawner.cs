@@ -6,7 +6,9 @@ using UnityEngine;
 
 public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
 {
-    public NetworkPrefabRef PlayerPrefab;
+    [Header("Player Prefabs")]
+    public NetworkPrefabRef PlayerPrefab;  // Player 1 (Host)
+    public NetworkPrefabRef Player2Prefab; // Player 2 (Client)
 
     // Keep track of players we've already spawned for in this session locally
     private HashSet<PlayerRef> _spawnedPlayers = new HashSet<PlayerRef>();
@@ -21,19 +23,16 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
                 SpawnPlayer(player);
             }
         }
-        
-        // Register callbacks to listen for future join events
-        // Note: We implement the full INetworkRunnerCallbacks interface below
+
         Runner.AddCallbacks(this);
     }
-    
+
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         _spawnedPlayers.Clear();
         runner.RemoveCallbacks(this);
     }
 
-    // Required by INetworkRunnerCallbacks - Triggered when a new player joins
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (runner.IsSharedModeMasterClient || runner.IsServer)
@@ -44,10 +43,8 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void SpawnPlayer(PlayerRef player)
     {
-        // 1. Check if we already processed this player locally
         if (_spawnedPlayers.Contains(player)) return;
 
-        // 2. Check if Fusion already has an object for this player (Re-join protection)
         if (Runner.GetPlayerObject(player) != null)
         {
             _spawnedPlayers.Add(player);
@@ -58,17 +55,27 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
 
         Debug.Log($"[PlayerSpawner] Spawning character for Player: {player}");
 
-        // FIX: Increased Y from 1 to 2 to prevent spawning inside the floor.
-        // Gravity will pull the player down safely.
         Vector3 spawnPosition = new Vector3(0, 2f, 0);
-        
-        try 
+
+        // --- SELECTION LOGIC ---
+        // Default to Player 1 prefab
+        NetworkPrefabRef prefabToSpawn = PlayerPrefab;
+
+        // If the joining player is NOT the Host (LocalPlayer on the Server), give them Player 2
+        // Note: This assumes a typical Host-Client setup.
+        if (Player2Prefab.IsValid && player != Runner.LocalPlayer)
+        {
+            prefabToSpawn = Player2Prefab;
+        }
+        // -----------------------
+
+        try
         {
             NetworkObject playerObject = Runner.Spawn(
-                PlayerPrefab,
+                prefabToSpawn,
                 spawnPosition,
                 Quaternion.identity,
-                inputAuthority: player 
+                inputAuthority: player
             );
 
             Runner.SetPlayerObject(player, playerObject);
@@ -80,13 +87,12 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) 
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         if (_spawnedPlayers.Contains(player)) _spawnedPlayers.Remove(player);
     }
 
-    // --- INetworkRunnerCallbacks Empty Boilerplate ---
-    // These methods are required to satisfy the interface contract
+    // Boilerplate
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
