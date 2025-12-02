@@ -79,20 +79,22 @@ namespace Fusion {
       var previousPos  = transform.position;
       var moveVelocity = Data.Velocity;
 
-      // --- CHANGE START ---
-      // REMOVED: direction = direction.normalized; 
-      
-      // Ensure we don't exceed length 1.0 (e.g. diagonal keyboard input)
-      if (direction.sqrMagnitude > 1f) 
-          direction.Normalize();
-
+      // --- ANALOG INPUT FIX ---
       float inputMagnitude = direction.magnitude;
-      // --- CHANGE END ---
+      if (inputMagnitude > 1f)
+      {
+          direction.Normalize();
+          inputMagnitude = 1f;
+      }
+      // ------------------------
 
+      // Ground Check & Gravity Reset
+      // We add a slightly stronger downward force when grounded to ensure we snap to the floor
       if (Data.Grounded && moveVelocity.y < 0) {
-        moveVelocity.y = 0f;
+        moveVelocity.y = -5f; 
       }
 
+      // Always Apply Gravity
       moveVelocity.y += gravity * Runner.DeltaTime;
 
       var horizontalVel = default(Vector3);
@@ -100,24 +102,17 @@ namespace Fusion {
       horizontalVel.z = moveVelocity.z;
 
       if (inputMagnitude < 0.001f) {
+        // Decelerate
         horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
       } else {
-        // --- CHANGE START ---
-        // We use the magnitude to scale the MaxSpeed. 
-        // If joystick is 50%, target speed is 50% of MaxSpeed.
+        // Accelerate
         float targetSpeed = maxSpeed * inputMagnitude;
+        Vector3 desiredVel = direction * targetSpeed;
         
-        // Normalize direction for the acceleration vector so acceleration is constant
-        Vector3 accDir = direction / inputMagnitude;
+        horizontalVel = Vector3.MoveTowards(horizontalVel, desiredVel, acceleration * deltaTime);
         
-        horizontalVel += accDir * acceleration * deltaTime;
-        
-        // Clamp to the target analog speed
-        horizontalVel = Vector3.ClampMagnitude(horizontalVel, targetSpeed);
-
-        // Internal rotation (optional, often handled by PlayerMovement, but kept for compatibility)
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(accDir), rotationSpeed * Runner.DeltaTime);
-        // --- CHANGE END ---
+        // Rotate Character
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
       }
 
       moveVelocity.x = horizontalVel.x;
@@ -132,10 +127,13 @@ namespace Fusion {
     public override void Spawned() {
       _initial = default;
       TryGetComponent(out _controller);
-      // Without disabling and re-enabling the CharacterController here, the first Move call will reset the position to 0,0,0 instead of
-      // keeping the position it was spawned at. Presumably disabling it clears some kind of internally cached "previous position" value
+
+      // Force the controller to acknowledge the spawn position immediately
+      // This prevents the "Snap back to 0,0,0" issue on first frame
       _controller.enabled = false;
+      _controller.transform.position = transform.position; // Redundant but safe
       _controller.enabled = true;
+      
       CopyToBuffer();
     }
 

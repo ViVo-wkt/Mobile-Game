@@ -21,17 +21,19 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
                 SpawnPlayer(player);
             }
         }
-        // Register callbacks
+        
+        // Register callbacks to listen for future join events
+        // Note: We implement the full INetworkRunnerCallbacks interface below
         Runner.AddCallbacks(this);
     }
     
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        // Clean up cache and callbacks when the spawner is destroyed
         _spawnedPlayers.Clear();
         runner.RemoveCallbacks(this);
     }
 
+    // Required by INetworkRunnerCallbacks - Triggered when a new player joins
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (runner.IsSharedModeMasterClient || runner.IsServer)
@@ -42,26 +44,26 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void SpawnPlayer(PlayerRef player)
     {
-        // 1. Local Safety Check: Prevent double-execution in the same frame/session
+        // 1. Check if we already processed this player locally
         if (_spawnedPlayers.Contains(player)) return;
 
-        // 2. Fusion Safety Check: Prevent spawning if Fusion already knows about an object for this player
+        // 2. Check if Fusion already has an object for this player (Re-join protection)
         if (Runner.GetPlayerObject(player) != null)
         {
             _spawnedPlayers.Add(player);
             return;
         }
 
-        // Mark as processed immediately
         _spawnedPlayers.Add(player);
 
         Debug.Log($"[PlayerSpawner] Spawning character for Player: {player}");
 
-        Vector3 spawnPosition = new Vector3(0, 1, 0);
+        // FIX: Increased Y from 1 to 2 to prevent spawning inside the floor.
+        // Gravity will pull the player down safely.
+        Vector3 spawnPosition = new Vector3(0, 2f, 0);
         
         try 
         {
-            // CRITICAL: The 'inputAuthority' parameter must be the 'player' we are spawning for.
             NetworkObject playerObject = Runner.Spawn(
                 PlayerPrefab,
                 spawnPosition,
@@ -69,23 +71,22 @@ public class PlayerSpawner : NetworkBehaviour, INetworkRunnerCallbacks
                 inputAuthority: player 
             );
 
-            // Register object so we can find it later
             Runner.SetPlayerObject(player, playerObject);
         }
         catch (System.Exception e)
         {
             Debug.LogError($"[PlayerSpawner] Failed to spawn player! Exception: {e.Message}");
-            // If spawn actually failed, allow retrying
             _spawnedPlayers.Remove(player);
         }
     }
 
-    // --- INetworkRunnerCallbacks Boilerplate ---
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) 
     {
-        // Optional: Despawn player object if they leave
         if (_spawnedPlayers.Contains(player)) _spawnedPlayers.Remove(player);
     }
+
+    // --- INetworkRunnerCallbacks Empty Boilerplate ---
+    // These methods are required to satisfy the interface contract
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
