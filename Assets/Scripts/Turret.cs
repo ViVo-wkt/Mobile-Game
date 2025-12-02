@@ -1,45 +1,133 @@
 using Fusion;
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Turret : NetworkBehaviour
 {
     [Header("Turret Settings")]
-    public float Damage = 25f;       // 1 Heart
-    public float FireRate = 2f;      // Seconds between shots
-    public float Range = 15f;        // Detection radius
-    public LayerMask TargetLayer;    // Layer to search for players (e.g., Default or Player)
-    public LayerMask ObstacleLayer;  // Layer for walls/obstacles blocking sight
+    public float Damage = 25f;
+    public float FireRate = 2f;
+    public float Range = 15f;
+
+    [Header("Layers")]
+    [Tooltip("Layer for the Player")]
+    public LayerMask TargetLayer;
+    [Tooltip("Layers that block the bullet (e.g. Default, Ground, Walls)")]
+    public LayerMask ObstacleLayer;
 
     [Header("Visuals")]
-    public Transform TurretHead;     // Assign the rotating part of the turret here
-    public Transform FirePoint;      // Point where the shot originates (for raycasting)
+    public Transform TurretHead;
+    public Transform FirePoint;
+
+    [Tooltip("Assign the small sphere GameObject here. It will be enabled/disabled when firing.")]
+    public GameObject MuzzleFlashSphere;
+
     public float RotationSpeed = 5f;
+    public Vector3 RotationCorrection = Vector3.zero;
+
+    [Header("Debugging")]
+    public bool ShowDebugLines = true;
 
     [Networked] private TickTimer AttackTimer { get; set; }
 
-    // Run logic only on the server/host to prevent cheating and desync
+    public override void Spawned()
+    {
+        // Ensure the sphere is hidden at start
+        if (MuzzleFlashSphere != null) MuzzleFlashSphere.SetActive(false);
+    }
+
     public override void FixedUpdateNetwork()
     {
-        // Only the State Authority (Host/Server) calculates logic
         if (!Object.HasStateAuthority) return;
 
         NetworkObject target = FindClosestPlayer();
 
         if (target != null)
         {
-            // 1. Rotate towards target
             RotateTowards(target.transform.position);
 
-            // 2. Check Line of Sight
             if (CheckLineOfSight(target))
             {
-                // 3. Attack if cooldown is finished
                 if (AttackTimer.ExpiredOrNotRunning(Runner))
                 {
                     Attack(target);
                     AttackTimer = TickTimer.CreateFromSeconds(Runner, FireRate);
                 }
             }
+        }
+    }
+
+    private void Attack(NetworkObject target)
+    {
+        // 1. Deal Damage
+        var healthScript = target.GetComponent<Health>();
+        if (healthScript != null)
+        {
+            healthScript.DealDamageRpc(Damage);
+        }
+
+        // 2. Trigger Visuals (Run on all clients)
+        Rpc_FireVisuals();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void Rpc_FireVisuals()
+    {
+        if (MuzzleFlashSphere != null)
+        {
+            // If already flashing, stop the old coroutine so we don't flicker weirdly
+            StopAllCoroutines();
+            StartCoroutine(FlashSphere());
+        }
+    }
+
+    private IEnumerator FlashSphere()
+    {
+        MuzzleFlashSphere.SetActive(true);
+        yield return new WaitForSeconds(0.1f); // Visible for 0.1 seconds
+        MuzzleFlashSphere.SetActive(false);
+    }
+
+    // --- Targeting Logic (Same as before) ---
+
+    private bool CheckLineOfSight(NetworkObject target)
+    {
+        if (FirePoint == null) return false;
+
+        Vector3 origin = FirePoint.position;
+        Vector3 targetCenter = target.transform.position + Vector3.up * 1.5f;
+        Vector3 direction = (targetCenter - origin).normalized;
+        float distance = Vector3.Distance(origin, targetCenter);
+
+        RaycastHit[] hits = Physics.RaycastAll(origin, direction, distance, ObstacleLayer);
+        System.Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance));
+
+        foreach (var hit in hits)
+        {
+            if (hit.transform.IsChildOf(transform)) continue; // Ignore Turret
+            if (hit.transform.root == target.transform.root) continue; // Ignore Target
+
+            if (ShowDebugLines) Debug.DrawLine(origin, hit.point, Color.red);
+            return false;
+        }
+
+        if (ShowDebugLines) Debug.DrawLine(origin, targetCenter, Color.green);
+        return true;
+    }
+
+    private void RotateTowards(Vector3 targetPos)
+    {
+        if (TurretHead == null) return;
+
+        Vector3 direction = targetPos - TurretHead.position;
+        direction.y = 0;
+
+        if (direction.sqrMagnitude > 0.001f)
+        {
+            Quaternion lookRot = Quaternion.LookRotation(direction);
+            Quaternion correctedRot = lookRot * Quaternion.Euler(RotationCorrection);
+            TurretHead.rotation = Quaternion.Slerp(TurretHead.rotation, correctedRot, RotationSpeed * Runner.DeltaTime);
         }
     }
 
@@ -51,10 +139,7 @@ public class Turret : NetworkBehaviour
 
         foreach (var hit in hits)
         {
-            // Look for the Health component on the root of the object
             var health = hit.GetComponentInParent<Health>();
-
-            // Only target valid, living players
             if (health != null && !health.IsDead)
             {
                 float dist = Vector3.Distance(transform.position, health.transform.position);
@@ -65,59 +150,9 @@ public class Turret : NetworkBehaviour
                 }
             }
         }
-
         return closestTarget;
     }
 
-    private bool CheckLineOfSight(NetworkObject target)
-    {
-        Vector3 origin = FirePoint != null ? FirePoint.position : transform.position;
-        Vector3 direction = (target.transform.position - origin).normalized;
-        float distance = Vector3.Distance(origin, target.transform.position);
-
-        // Raycast to see if we hit an obstacle before the player
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, distance, ObstacleLayer))
-        {
-            // If we hit something that isn't the player, line of sight is blocked
-            // (Assuming obstacles are on the ObstacleLayer and Players are not, 
-            // or the Player collider is excluded from ObstacleLayer)
-            if (hit.collider.gameObject != target.gameObject)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private void RotateTowards(Vector3 targetPos)
-    {
-        if (TurretHead == null) return;
-
-        Vector3 direction = targetPos - TurretHead.position;
-        direction.y = 0; // Keep rotation horizontal only (remove if you want 3D aiming)
-
-        if (direction != Vector3.zero)
-        {
-            Quaternion lookRot = Quaternion.LookRotation(direction);
-            TurretHead.rotation = Quaternion.Slerp(TurretHead.rotation, lookRot, RotationSpeed * Runner.DeltaTime);
-        }
-    }
-
-    private void Attack(NetworkObject target)
-    {
-        // Get the Health component and deal damage
-        // Since we are StateAuthority, we can call the RPC or modify data.
-        // Your Health.cs uses an RPC, so we call that.
-        var healthScript = target.GetComponent<Health>();
-        if (healthScript != null)
-        {
-            Debug.Log($"Turret shooting {target.name} for {Damage} damage!");
-            healthScript.DealDamageRpc(Damage);
-        }
-    }
-
-    // Visualize the range in the Editor
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
