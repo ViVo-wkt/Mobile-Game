@@ -1,36 +1,59 @@
 using Fusion;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class PlayerSpawner : SimulationBehaviour, IPlayerJoined
+public class PlayerSpawner : NetworkBehaviour, IPlayerJoined
 {
-    public GameObject PlayerPrefab;
+    public NetworkPrefabRef PlayerPrefab;
+
+    public override void Spawned()
+    {
+        // Only the Master Client (State Authority) spawns players in Shared Mode
+        if (Runner.IsSharedModeMasterClient || Runner.IsServer)
+        {
+            foreach (var player in Runner.ActivePlayers)
+            {
+                SpawnPlayer(player);
+            }
+        }
+    }
 
     public void PlayerJoined(PlayerRef player)
     {
-        // 1. Only the client responsible for spawning should execute this logic.
-        // In Shared Mode, every client runs this, but we only want to spawn the
-        // character when that character's specific player joins.
-
-        // This is a common pattern for local-only spawning in Shared Mode,
-        // but it doesn't correctly handle network synchronization in all cases.
-        // We will use the Runner.IsSharedModeMasterClient check for robustness.
-
-        if (Runner.IsSharedModeMasterClient || Runner.IsServer) // Use MasterClient/Server check for authoritative spawning
+        if (Runner.IsSharedModeMasterClient || Runner.IsServer)
         {
-            // The position where the player will spawn
-            Vector3 spawnPosition = new Vector3(0, 1, 0);
+            SpawnPlayer(player);
+        }
+    }
 
-            // 2. CRITICAL FIX: The Runner.Spawn() call must pass the 'player' reference
-            //    as the 'inputAuthority' argument.
+    private void SpawnPlayer(PlayerRef player)
+    {
+        // Safety Check: Prevent duplicate spawning
+        if (Runner.GetPlayerObject(player) != null)
+        {
+            return;
+        }
+
+        Debug.Log($"[PlayerSpawner] Spawning character for Player: {player}");
+
+        Vector3 spawnPosition = new Vector3(0, 1, 0);
+        
+        try 
+        {
+            // CRITICAL: The 'inputAuthority' parameter must be the 'player' we are spawning for.
             NetworkObject playerObject = Runner.Spawn(
-                prefab: PlayerPrefab,
-                position: spawnPosition,
-                rotation: Quaternion.identity,
-                inputAuthority: player // <--- THIS ASSIGNS INPUT AUTHORITY
+                PlayerPrefab,
+                spawnPosition,
+                Quaternion.identity,
+                inputAuthority: player 
             );
 
-            // Optional but recommended: Link the NetworkObject to the PlayerRef
+            // Register object so we can find it later
             Runner.SetPlayerObject(player, playerObject);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[PlayerSpawner] Failed to spawn player! Exception: {e.Message}");
         }
     }
 }
