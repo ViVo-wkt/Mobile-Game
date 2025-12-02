@@ -85,28 +85,31 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        // 1. Get Input from the network (works for Client and Server)
+        // Initialize direction to zero (idle)
+        Vector3 direction = Vector3.zero;
+
+        // 1. Try to get Input
         if (GetInput(out NetworkInputData data))
         {
             // 2. Convert Vector2 input to Vector3 direction
-            Vector3 direction = new Vector3(data.MoveDirection.x, 0, data.MoveDirection.y);
+            direction = new Vector3(data.MoveDirection.x, 0, data.MoveDirection.y);
             
             // 3. Clamp to ensure diagonal movement isn't faster than 1.0
             direction = Vector3.ClampMagnitude(direction, 1f);
-
-            // 4. Move using the NetworkCharacterController
-            _controller.Move(direction);
-
-            // 5. Rotate character to face movement direction
-            if (direction.sqrMagnitude > 0.001f)
-            {
-                _targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 
-                    1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
-            }
         }
-        
-        // NOTE: We REMOVED UpdateTendrilAim() because TendrilLauncher now reads inputs directly.
+
+        // 4. MOVE ALWAYS (Crucial Fix)
+        // We call this even if direction is zero. 
+        // This ensures the NetworkCharacterController applies Gravity and Braking every tick.
+        _controller.Move(direction);
+
+        // 5. Rotation only happens if we are actually moving
+        if (direction.sqrMagnitude > 0.001f)
+        {
+            _targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 
+                1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
+        }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
