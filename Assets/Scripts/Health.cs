@@ -1,63 +1,93 @@
 using Fusion;
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class Health : NetworkBehaviour
 {
     [Networked, OnChangedRender(nameof(HealthChanged))]
     public float NetworkedHealth { get; set; } = 100f;
 
-    [Header("World Space UI (Floating)")]
+    [Networked, OnChangedRender(nameof(DeathStateChanged))]
+    public NetworkBool IsDead { get; set; }
+
+    [Header("Health UI")]
     [Tooltip("Will be auto-assigned from the instantiated prefab")]
     public TextMeshProUGUI HealthText;
 
-    [Tooltip("Drag the floating HealthDisplay prefab here")]
+    [Header("UI Prefab")]
+    [Tooltip("Drag the HealthDisplay prefab here")]
     public GameObject HealthDisplayPrefab;
 
-    [Header("Local HUD (Screen Corner)")]
-    [Tooltip("Drag the prefab containing the HealthHUD script and 4 heart images here")]
+    [Header("Local HUD")]
+    [Tooltip("Drag the prefab containing the HealthHUD script here")]
     public GameObject LocalHudPrefab;
 
     private GameObject _worldHealthUIInstance;
     private HealthHUD _localHudInstance;
+
+    // --- Callbacks ---
 
     void HealthChanged()
     {
         UpdateHealthUI();
     }
 
+    void DeathStateChanged()
+    {
+        // 1. Disable/Enable Movement
+        var movement = GetComponent<PlayerMovement>();
+        if (movement != null) movement.enabled = !IsDead;
+
+        // 2. Disable/Enable Physics (Collider)
+        // We use the standard CharacterController referenced by your scripts
+        var charController = GetComponent<CharacterController>();
+        if (charController != null)
+        {
+            charController.enabled = !IsDead;
+        }
+
+        // 3. Disable/Enable Visuals (Mesh)
+        foreach (var renderer in GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = !IsDead;
+        }
+
+        // 4. Update UI visibility
+        if (_worldHealthUIInstance != null) _worldHealthUIInstance.SetActive(!IsDead);
+    }
+
+    // --- Lifecycle ---
+
     public override void Spawned()
     {
         base.Spawned();
 
-        // 1. Spawn the Local HUD (Only for the local player)
-        if (Object.HasInputAuthority && LocalHudPrefab != null)
+        if (Object.HasInputAuthority)
         {
             SpawnLocalHUD();
         }
 
-        // 2. Spawn the World Space Floating Bar (Optional: typically for other players to see)
-        // If you only want others to see the floaty text, check !Object.HasInputAuthority
         SpawnWorldHealthUI();
-
-        // 3. Force an update so UI matches current health immediately
         UpdateHealthUI();
+        
+        // Ensure visual state matches IsDead when joining late
+        DeathStateChanged();
     }
 
     private void SpawnLocalHUD()
     {
-        Canvas canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
-        if (canvas == null)
-        {
-            Debug.LogError("Canvas missing! Cannot spawn Health HUD.");
-            return;
-        }
-
-        GameObject hudObj = Instantiate(LocalHudPrefab, canvas.transform);
-        _localHudInstance = hudObj.GetComponent<HealthHUD>();
+        if (LocalHudPrefab == null) return;
         
-        // Optional: Position it if the prefab isn't already anchored correctly
-        // But usually, you set the anchors in the Prefab itself (e.g., Top Left Corner).
+        // Use UnityEngine.Object to avoid conflict with Fusion.NetworkBehaviour.Object
+        Canvas canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
+        
+        if (canvas != null)
+        {
+            GameObject hudObj = Instantiate(LocalHudPrefab, canvas.transform);
+            _localHudInstance = hudObj.GetComponent<HealthHUD>();
+            _localHudInstance.UpdateDisplay(NetworkedHealth);
+        }
     }
 
     private void SpawnWorldHealthUI()
@@ -69,48 +99,69 @@ public class Health : NetworkBehaviour
         _worldHealthUIInstance.transform.SetParent(transform, false);
 
         HealthText = _worldHealthUIInstance.GetComponentInChildren<TextMeshProUGUI>();
-        if (HealthText == null)
-        {
-            Debug.LogError("HealthDisplayPrefab must contain a TextMeshProUGUI component!");
-        }
     }
 
     private void UpdateHealthUI()
     {
-        // Update World Text (Floating)
-        if (HealthText != null)
-        {
-            HealthText.text = $"{NetworkedHealth:F0} HP";
-        }
-
-        // Update Local HUD (Hearts)
-        if (_localHudInstance != null)
-        {
-            _localHudInstance.UpdateDisplay(NetworkedHealth);
-        }
+        if (HealthText != null) HealthText.text = $"{NetworkedHealth:F0} HP";
+        if (_localHudInstance != null) _localHudInstance.UpdateDisplay(NetworkedHealth);
     }
+
+    // --- Damage & Death Logic ---
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void DealDamageRpc(float damage)
     {
+        if (IsDead) return;
+
         NetworkedHealth = Mathf.Max(0, NetworkedHealth - damage);
+
+        if (NetworkedHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        IsDead = true;
+        
+        // FIX: Manually call the callback on the Host/State Authority
+        // because OnChanged callbacks don't trigger locally by default.
+        DeathStateChanged();
+
+        StartCoroutine(RespawnCoroutine());
+    }
+
+    private IEnumerator RespawnCoroutine()
+    {
+        yield return new WaitForSeconds(3f);
+        Respawn();
+    }
+
+    private void Respawn()
+    {
+        NetworkedHealth = 100f;
+        IsDead = false;
+
+        // FIX: Manually call callback again to revive locally
+        DeathStateChanged();
+
+        // Reset Position
+        var netChar = GetComponent<NetworkCharacterController>();
+        if (netChar != null)
+        {
+            netChar.Teleport(new Vector3(0, 2f, 0)); 
+        }
+        else
+        {
+            transform.position = new Vector3(0, 2f, 0);
+        }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        // Cleanup World UI
-        if (_worldHealthUIInstance != null)
-        {
-            Destroy(_worldHealthUIInstance);
-            _worldHealthUIInstance = null;
-            HealthText = null;
-        }
-
-        // Cleanup Local HUD
-        if (_localHudInstance != null)
-        {
-            Destroy(_localHudInstance.gameObject);
-            _localHudInstance = null;
-        }
+        if (_worldHealthUIInstance != null) Destroy(_worldHealthUIInstance);
+        if (_localHudInstance != null) Destroy(_localHudInstance.gameObject);
     }
 }

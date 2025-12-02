@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KnockOverAngle: 60
   ExplosionDelay: 0.5
-  DamageAmount: 10
+  DamageAmount: 13
   ExplosionRadius: 2
   ExplosionVFX: {fileID: 0}
 --- !u!1 &162741722284172894
