@@ -3,39 +3,69 @@ using UnityEngine;
 
 public class TendrilController : NetworkBehaviour
 {
-    [Networked] private Vector3 TargetPosition { get; set; }
-    [Networked] private float MaxRange { get; set; }
+    [Networked] private Vector3 CurrentTarget { get; set; }
     [Networked] private bool IsRetracting { get; set; }
     [Networked] private float CurrentLength { get; set; }
 
-    public float Speed = 30f;
-    private TendrilLauncher _launcher;
-    private Rigidbody _rigidbody;
-    private Collider _collider;
+    [Header("Settings")]
+    public float ExtendSpeed = 20f;
+    public float RetractSpeed = 30f;
 
-    public void Initialize(TendrilLauncher launcher, Vector3 initialTarget)
+    [Header("Visual Correction")]
+    [Tooltip("If using a Unity Cylinder/Capsule, set this to 2. If using a Cube, set to 1.")]
+    public float BasePrefabLength = 2f; 
+
+    public bool IsFullyRetracted => CurrentLength <= 0.1f && IsRetracting;
+
+    private TendrilLauncher _ownerLauncher;
+    private Rigidbody _rb;
+
+    public void Initialize(TendrilLauncher launcher)
     {
-        _launcher = launcher;
-        TargetPosition = initialTarget;
-        MaxRange = launcher.MaxTendrilRange;
-        IsRetracting = false;
+        _ownerLauncher = launcher;
         CurrentLength = 0.1f;
-        transform.position = _launcher.transform.position;
-
-        Vector3 originalScale = transform.localScale;
-        transform.localScale = new Vector3(originalScale.x, CurrentLength, originalScale.z);
-
-        _rigidbody = GetComponent<Rigidbody>();
-        if (_rigidbody != null) _rigidbody.isKinematic = true;
-
-        _collider = GetComponent<Collider>();
-        if (_collider != null) _collider.isTrigger = false;
+        
+        _rb = GetComponent<Rigidbody>();
+        if (_rb) 
+        {
+            _rb.isKinematic = true; 
+            _rb.interpolation = RigidbodyInterpolation.Interpolate;
+        }
     }
 
-    public void SetTarget(Vector3 newTarget, float maxRange)
+    public override void Spawned()
     {
-        TargetPosition = newTarget;
-        MaxRange = maxRange;
+        // 1. FIND THE OWNER
+        if (_ownerLauncher == null)
+        {
+            var playerObj = Runner.GetPlayerObject(Object.InputAuthority);
+            if (playerObj != null)
+            {
+                _ownerLauncher = playerObj.GetComponent<TendrilLauncher>();
+            }
+        }
+
+        // 2. IGNORE COLLISIONS (Run on Server AND Client)
+        if (_ownerLauncher != null)
+        {
+            // CHANGED: Use GetComponentsInChildren to find ALL colliders on the player body/limbs
+            var playerColliders = _ownerLauncher.GetComponentsInChildren<Collider>(true); 
+            var myCollider = GetComponent<Collider>();
+
+            if (myCollider != null)
+            {
+                foreach (var pc in playerColliders)
+                {
+                    // Don't ignore myself if I accidentally found myself
+                    if (pc != myCollider) Physics.IgnoreCollision(myCollider, pc);
+                }
+            }
+        }
+    }
+
+    public void SetTarget(Vector3 target)
+    {
+        CurrentTarget = target;
         IsRetracting = false;
     }
 
@@ -46,60 +76,62 @@ public class TendrilController : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (_launcher == null)
+        // Fail-safe: Try to find owner again if Spawned() missed it (e.g. race condition)
+        if (_ownerLauncher == null) 
         {
             var playerObj = Runner.GetPlayerObject(Object.InputAuthority);
-            if (playerObj != null) _launcher = playerObj.GetComponent<TendrilLauncher>();
-            if (_launcher == null) return;
+            if (playerObj != null) _ownerLauncher = playerObj.GetComponent<TendrilLauncher>();
+            
+            // If still null, we can't update position
+            if (_ownerLauncher == null) 
+            {
+                if (Object.HasStateAuthority) Runner.Despawn(Object);
+                return;
+            }
         }
 
-        Vector3 playerPos = _launcher.transform.position;
-        float delta = Speed * Runner.DeltaTime;
+        Transform originT = _ownerLauncher.SpawnPoint ? _ownerLauncher.SpawnPoint : _ownerLauncher.transform;
+        Vector3 origin = originT.position;
+        float distToTarget = Vector3.Distance(origin, CurrentTarget);
 
-        float desiredLength = IsRetracting ? 0.1f : Mathf.Min(Vector3.Distance(playerPos, TargetPosition), MaxRange);
-        CurrentLength = Mathf.MoveTowards(CurrentLength, desiredLength, delta);
-
-        if (IsRetracting && CurrentLength <= 0.1f)
+        // 1. Calculate Length
+        if (IsRetracting)
         {
-            if (_launcher != null) _launcher.ClearActiveTendrilRpc();
-            Runner.Despawn(Object);
-            return;
+            CurrentLength = Mathf.MoveTowards(CurrentLength, 0f, RetractSpeed * Runner.DeltaTime);
+        }
+        else
+        {
+            CurrentLength = Mathf.MoveTowards(CurrentLength, distToTarget, ExtendSpeed * Runner.DeltaTime);
         }
 
-        if (CurrentLength > 0.1f)
+        // 2. Calculate Direction
+        Vector3 direction = (CurrentTarget - origin).normalized;
+        if (direction == Vector3.zero) direction = originT.forward;
+
+        // 3. Physics Positioning
+        Vector3 tipPosition = origin + direction * CurrentLength;
+        Vector3 centerPos = Vector3.Lerp(origin, tipPosition, 0.5f);
+        
+        // 4. Rotation Logic
+        // Stabilized LookRotation prevents spinning
+        Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up) * Quaternion.Euler(90f, 0f, 0f);
+
+        if (_rb != null)
         {
-            Vector3 direction = (TargetPosition - playerPos).normalized;
-            Vector3 midpoint = playerPos + direction * (CurrentLength * 0.5f);
-            Quaternion rotation = Quaternion.LookRotation(Vector3.up, direction);
-
-            if (_rigidbody != null)
-            {
-                _rigidbody.MovePosition(midpoint);
-                _rigidbody.MoveRotation(rotation);
-            }
-            else
-            {
-                transform.position = midpoint;
-                transform.rotation = rotation;
-            }
-
-            Vector3 scale = transform.localScale;
-            scale.y = CurrentLength;
-            transform.localScale = scale;
+            _rb.MovePosition(centerPos);
+            _rb.MoveRotation(rotation);
+        }
+        else
+        {
+            transform.position = centerPos;
+            transform.rotation = rotation;
         }
     }
 
-    public override void Spawned()
+    public override void Render()
     {
-        base.Spawned();
-        var playerObj = Runner.GetPlayerObject(Object.InputAuthority);
-        if (playerObj != null)
-        {
-            Collider[] playerColliders = playerObj.GetComponentsInChildren<Collider>();
-            foreach (var pc in playerColliders)
-            {
-                if (_collider != null) Physics.IgnoreCollision(_collider, pc);
-            }
-        }
+        Vector3 s = transform.localScale;
+        float yScale = CurrentLength / BasePrefabLength;
+        transform.localScale = new Vector3(s.x, yScale, s.z); 
     }
 }

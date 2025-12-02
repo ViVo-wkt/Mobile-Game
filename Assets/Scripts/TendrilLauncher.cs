@@ -3,74 +3,98 @@ using UnityEngine;
 
 public class TendrilLauncher : NetworkBehaviour
 {
+    [Header("Settings")]
     public NetworkPrefabRef TendrilPrefab;
     public float MaxTendrilRange = 10f;
-    public LayerMask TendrilRaycastMask;
+    public Transform SpawnPoint; // Assign a bone (e.g., Spine) or leave empty to use transform
 
     [Networked] private NetworkObject ActiveTendril { get; set; }
-    [Networked] private Vector3 AimTargetPoint { get; set; }
-    [Networked] private bool IsRetracting { get; set; }
+    
+    // Sync the target point so all clients know where it's going
+    [Networked] public Vector3 NetworkedAimTarget { get; set; }
 
-    private void Awake()
+    public override void FixedUpdateNetwork()
     {
-        TendrilRaycastMask = ~LayerMask.GetMask("Player");
-    }
-
-    void Update()
-    {
-        if (!HasInputAuthority) return;
-
-        bool wantsToExtend = !IsRetracting && AimTargetPoint != Vector3.zero;
-        bool hasTendril = ActiveTendril != null;
-
-        if (wantsToExtend && !hasTendril)
+        // 1. Get Input from the struct
+        if (GetInput(out NetworkInputData input))
         {
-            SpawnTendril(AimTargetPoint);
+            Vector3 aimDir = new Vector3(input.AimDirection.x, 0, input.AimDirection.y);
+            
+            // 2. Logic: If joystick is pushed, extend; otherwise retract.
+            if (aimDir.sqrMagnitude > 0.01f)
+            {
+                // Calculate target position based on joystick magnitude (analog control)
+                float extendDistance = aimDir.magnitude * MaxTendrilRange;
+                Vector3 origin = SpawnPoint ? SpawnPoint.position : transform.position;
+                Vector3 targetPos = origin + aimDir.normalized * extendDistance;
+                
+                // Optional: Raycast to stop at walls
+                if (Physics.Raycast(origin + Vector3.up * 0.5f, aimDir.normalized, out RaycastHit hit, extendDistance, LayerMask.GetMask("Default")))
+                {
+                   targetPos = hit.point;
+                }
+
+                HandleTendrilSpawnOrUpdate(targetPos);
+            }
+            else
+            {
+                HandleRetraction();
+            }
         }
-        else if (wantsToExtend && hasTendril)
+        else
         {
-            ActiveTendril.GetComponent<TendrilController>().SetTarget(AimTargetPoint, MaxTendrilRange);
-        }
-        else if (!wantsToExtend && hasTendril)
-        {
-            ActiveTendril.GetComponent<TendrilController>().Retract();
-            IsRetracting = true;
-            AimTargetPoint = Vector3.zero;
-        }
-    }
-
-    private void SpawnTendril(Vector3 initialTarget)
-    {
-        if (!TendrilPrefab.IsValid) return;
-
-        Vector3 spawnPos = transform.position;
-        Vector3 dir = (initialTarget - spawnPos).normalized;
-        Quaternion rot = Quaternion.LookRotation(Vector3.up, dir);
-
-        NetworkObject tendril = Runner.Spawn(
-            TendrilPrefab, spawnPos, rot,
-            inputAuthority: Object.InputAuthority,
-            (runner, obj) => obj.GetComponent<TendrilController>().Initialize(this, initialTarget)
-        );
-
-        ActiveTendril = tendril;
-        IsRetracting = false;
-    }
-
-    public void SetAimTarget(Vector3 target)
-    {
-        AimTargetPoint = target;
-        if (target != Vector3.zero)
-        {
-            IsRetracting = false;
+             HandleRetraction();
         }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void ClearActiveTendrilRpc()
+    private void HandleTendrilSpawnOrUpdate(Vector3 targetPos)
     {
-        ActiveTendril = null;
-        IsRetracting = false;
-        AimTargetPoint = Vector3.zero;
+        // Only the State Authority (Server) spawns/updates NetworkObjects
+        if (!Object.HasStateAuthority) return;
+
+        NetworkedAimTarget = targetPos;
+
+        if (ActiveTendril == null)
+        {
+            // Spawn new tendril
+            ActiveTendril = Runner.Spawn(
+                TendrilPrefab, 
+                SpawnPoint ? SpawnPoint.position : transform.position, 
+                Quaternion.identity, 
+                Object.InputAuthority
+            );
+            
+            // Initialize
+            ActiveTendril.GetComponent<TendrilController>().Initialize(this);
+        }
+
+        // Update existing tendril
+        if (ActiveTendril != null)
+        {
+            ActiveTendril.GetComponent<TendrilController>().SetTarget(targetPos);
+        }
+    }
+
+    private void HandleRetraction()
+    {
+        if (!Object.HasStateAuthority) return;
+        
+        NetworkedAimTarget = Vector3.zero;
+
+        if (ActiveTendril != null)
+        {
+            var controller = ActiveTendril.GetComponent<TendrilController>();
+            if (controller != null)
+            {
+                controller.Retract();
+                
+                // If fully retracted, despawn it
+                if (controller.IsFullyRetracted)
+                {
+                    Runner.Despawn(ActiveTendril);
+                    ActiveTendril = null;
+                }
+            }
+        }
     }
 }

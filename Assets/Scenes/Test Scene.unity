@@ -193,8 +193,9 @@ GameObject:
   - component: {fileID: 199219188}
   - component: {fileID: 199219187}
   - component: {fileID: 199219190}
+  - component: {fileID: 199219191}
   m_Layer: 0
-  m_Name: Prototype Runner
+  m_Name: Network Runner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,6 +310,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawner
   PlayerPrefab: {fileID: 3020575455395471729, guid: ea1ca4122611ded4c9a7a97f327193ae, type: 3}
+--- !u!114 &199219191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199219186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 429bfa4b217bace41ad1da794f846395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &213858324 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4169551972998573455, guid: 6392cf32228dd494ab7d9ad325f7e681, type: 3}
@@ -2812,7 +2825,7 @@ GameObject:
   - component: {fileID: 2107574499}
   - component: {fileID: 2107574498}
   m_Layer: 0
-  m_Name: Prototype Network Start
+  m_Name: Network Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

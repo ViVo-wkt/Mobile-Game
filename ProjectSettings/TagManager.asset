@@ -9,12 +9,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Interactible
   - Water
   - UI
   - Buttons
-  - 
-  - 
+  - Player
+  - Tendril
   - 
   - 
   - 

@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    // CHANGED: Use Fusion's NetworkCharacterController instead of Unity's CharacterController
     private NetworkCharacterController _controller;
-    private Vector3 _inputDirection;
     private Quaternion _targetRotation;
 
     [Header("Movement")]
-    public float PlayerSpeed = 5f;
     public float RotationSmoothTime = 0.1f;
-    public float MoveSmoothTime = 0.1f;
 
     [Header("Joystick Prefabs")]
     public GameObject MoveJoystickPrefab;
@@ -23,12 +19,9 @@ public class PlayerMovement : NetworkBehaviour
 
     private CustomJoystick _moveJoystickInstance;
     private CustomJoystick _aimJoystickInstance;
-    private Vector3 _moveVelocity;
-    private Vector2 _lastAimInput;
 
     private void Awake()
     {
-        // CHANGED: Fetch the NetworkCharacterController component
         _controller = GetComponent<NetworkCharacterController>();
     }
 
@@ -41,7 +34,7 @@ public class PlayerMovement : NetworkBehaviour
         Canvas canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
         if (!canvas) { Debug.LogError("Canvas missing!"); return; }
 
-        // LEFT
+        // Spawn LEFT Joystick (Movement)
         if (MoveJoystickPrefab)
         {
             GameObject go = Instantiate(MoveJoystickPrefab, canvas.transform);
@@ -51,9 +44,12 @@ public class PlayerMovement : NetworkBehaviour
             a.size = new Vector2(180, 180);
             a.Apply();
             _moveJoystickInstance = go.GetComponent<CustomJoystick>();
+
+            // Register with Input Manager so the input struct can find it
+            NetworkInputManager.MoveJoystick = _moveJoystickInstance;
         }
 
-        // RIGHT
+        // Spawn RIGHT Joystick (Aiming)
         if (AimJoystickPrefab)
         {
             GameObject go = Instantiate(AimJoystickPrefab, canvas.transform);
@@ -63,6 +59,9 @@ public class PlayerMovement : NetworkBehaviour
             a.size = new Vector2(180, 180);
             a.Apply();
             _aimJoystickInstance = go.GetComponent<CustomJoystick>();
+
+            // Register with Input Manager so the input struct can find it
+            NetworkInputManager.AimJoystick = _aimJoystickInstance;
         }
 
         StartCoroutine(WaitForCameraAndAssign());
@@ -82,71 +81,33 @@ public class PlayerMovement : NetworkBehaviour
         {
             camScript.Target = transform;
         }
-        else
-        {
-            Debug.LogError("ThirdPersonCamera missing!");
-        }
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (!HasStateAuthority) return;
-
-        Vector2 moveInput = _moveJoystickInstance != null ? _moveJoystickInstance.Direction :
-            new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        // 1. Do NOT use .normalized here. Use ClampMagnitude to keep values between 0.0 and 1.0
-        Vector3 direction = new Vector3(moveInput.x, 0, moveInput.y);
-        direction = Vector3.ClampMagnitude(direction, 1f);
-
-        // 2. Pass the direction directly. 
-        // We do NOT multiply by Speed or DeltaTime here because the NetworkCharacterController
-        // calculates velocity internally based on its own Acceleration/MaxSpeed settings.
-        _controller.Move(direction);
-
-        // Rotation Logic
-        if (direction.sqrMagnitude > 0.001f)
+        // 1. Get Input from the network (works for Client and Server)
+        if (GetInput(out NetworkInputData data))
         {
-            _targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
-        }
+            // 2. Convert Vector2 input to Vector3 direction
+            Vector3 direction = new Vector3(data.MoveDirection.x, 0, data.MoveDirection.y);
+            
+            // 3. Clamp to ensure diagonal movement isn't faster than 1.0
+            direction = Vector3.ClampMagnitude(direction, 1f);
 
-        UpdateTendrilAim();
+            // 4. Move using the NetworkCharacterController
+            _controller.Move(direction);
+
+            // 5. Rotate character to face movement direction
+            if (direction.sqrMagnitude > 0.001f)
+            {
+                _targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, 
+                    1f - Mathf.Exp(-RotationSmoothTime / Runner.DeltaTime));
+            }
+        }
+        
+        // NOTE: We REMOVED UpdateTendrilAim() because TendrilLauncher now reads inputs directly.
     }
-
-    private void UpdateTendrilAim()
-    {
-        if (_aimJoystickInstance == null) return;
-
-        Vector2 aimInput = _aimJoystickInstance.Direction;
-        TendrilLauncher launcher = GetComponent<TendrilLauncher>();
-        if (launcher == null) return;
-
-        if ((aimInput - _lastAimInput).sqrMagnitude < 0.01f) return;
-        _lastAimInput = aimInput;
-
-        if (aimInput.magnitude > 0.1f)
-        {
-            Vector2 correctedInput = new Vector2(aimInput.x, aimInput.y);
-            Vector3 worldDir = new Vector3(correctedInput.x, 0, correctedInput.y).normalized;
-
-            float extendDist = aimInput.magnitude * launcher.MaxTendrilRange;
-            Vector3 target = transform.position + worldDir * extendDist;
-
-            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, worldDir, out RaycastHit hit, extendDist))
-                target = hit.point;
-
-            launcher.SetAimTarget(target);
-        }
-        else
-        {
-            launcher.SetAimTarget(Vector3.zero);
-            _lastAimInput = Vector2.zero;
-        }
-    }
-
-    // REMOVED: The Render() method is no longer needed. 
-    // NetworkCharacterController handles interpolation automatically.
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
