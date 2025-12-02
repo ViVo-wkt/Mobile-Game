@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: -8946174796223492397}
   - component: {fileID: -2562427926910556187}
   - component: {fileID: 2184231817263856100}
+  - component: {fileID: 2227825138895409981}
   m_Layer: 7
   m_Name: PlayerCharacter 3
   m_TagString: Player
@@ -246,6 +247,7 @@ MonoBehaviour:
   - {fileID: -99119427560449888}
   - {fileID: 6761959262992377120}
   - {fileID: 2184231817263856100}
+  - {fileID: 2227825138895409981}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-99119427560449888
 MonoBehaviour:
@@ -336,3 +338,19 @@ MonoBehaviour:
   braking: 25
   maxSpeed: 3.5
   rotationSpeed: 5
+--- !u!114 &2227825138895409981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020575455395471729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bcb1732a85145488bf5084e856957f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _NetworkedHealth: 100
+  HealthText: {fileID: 0}
+  HealthDisplayPrefab: {fileID: 0}
+  LocalHudPrefab: {fileID: 6464909509758447777, guid: 3cb2146982bfaca44bd46ca3dc9a87c7, type: 3}
