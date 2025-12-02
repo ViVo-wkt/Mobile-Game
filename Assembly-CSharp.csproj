@@ -59,6 +59,7 @@
     <Compile Include="Assets\Default\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\HealthHUD.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
+    <Compile Include="Assets\Scripts\Barrel.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\MainMenuController.cs" />

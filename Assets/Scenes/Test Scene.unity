@@ -436,7 +436,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &235114505
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1138,6 +1138,10 @@ PrefabInstance:
     - target: {fileID: 35855517111177644, guid: 3b9c79679c5832048a0cefcf5686852b, type: 3}
       propertyPath: m_Name
       value: Barrel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7554611137196837152, guid: 3b9c79679c5832048a0cefcf5686852b, type: 3}
+      propertyPath: SortKey
+      value: 4184377863
       objectReference: {fileID: 0}
     - target: {fileID: 9120643842703016547, guid: 3b9c79679c5832048a0cefcf5686852b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2488,6 +2492,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4667594447001786352, guid: 3110365d9a0a1aa46a9971b8d02a5951, type: 3}
+      propertyPath: SortKey
+      value: 189963659
+      objectReference: {fileID: 0}
     - target: {fileID: 14497636493041393, guid: 3110365d9a0a1aa46a9971b8d02a5951, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3
